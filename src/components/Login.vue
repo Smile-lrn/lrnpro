@@ -34,6 +34,21 @@
 		padding: 24px 0;
 		padding-bottom: 0;
 		border-radius: 10px;
+		/deep/ .ivu-input-group-append{
+			padding: 0;
+			overflow: hidden;
+			border: none;
+			height: 32px;
+		}
+		.appendimgbox{
+			width: 80px;
+			display: flex;
+			align-items: center;
+			img{
+				width: 100%;
+				height: 32px;
+			}
+		}
 		.logintitle{
 			width: 100%;
 			height: 40px;
@@ -43,7 +58,7 @@
 		}
 		.ivu-form{
 			width: 80%;
-			.ivu-form-item-label{
+			/deep/ .ivu-form-item-label{
 				color: #fff;
 			}
 		}
@@ -56,13 +71,17 @@
 			<div class="logintitle">登录某某互联网平台</div>
 			<Form ref="formCustom" :model="formCustom" :rules="ruleCustom" :label-width="48">
 			    <FormItem label="账 号" prop="account">
-			        <Input type="text" v-model="formCustom.account"></Input>
+			        <Input type="text" v-model="formCustom.account" />
 			    </FormItem>
 			    <FormItem label="密 码" prop="passwdCheck">
-			        <Input type="password" v-model="formCustom.passwdCheck"></Input>
+			        <Input type="password" v-model="formCustom.passwdCheck" />
 			    </FormItem>
 			    <FormItem label="验证码" prop="age">
-			        <Input type="text" v-model="formCustom.age" number></Input>
+			        <Input type="text" v-model="formCustom.age" number>
+						 <div slot="append" class="appendimgbox">
+							 <img src="http://dl.lym2m.cn/public/verify?0.9916101715339238&random=0.9526005221504152&random=0.9619436271886317&random=0.17946752344834715&random=0.045428342459822524&random=0.2555581791130701&random=0.35478816814937186&random=0.49538068745397945&random=0.7811739884869227" alt="">
+						 </div>
+					 </Input>
 			    </FormItem>
 			    <FormItem>
 			        <Button type="primary" @click="handleSubmit('formCustom')">登录</Button>
@@ -118,15 +137,23 @@
             }
         },
         methods: {
+			// 登录
             handleSubmit (name) {
                 this.$refs[name].validate((valid) => {
                     if (valid) {
                         this.$Message.success('Success!');
+						this.$router.push({
+							name:'/Index',
+							params:{
+								
+							}
+						})
                     } else {
                         this.$Message.error('Fail!');
                     }
                 })
             },
+			// 重置
             handleReset (name) {
                 this.$refs[name].resetFields();
             }

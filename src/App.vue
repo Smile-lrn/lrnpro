@@ -16,6 +16,10 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   height: 100vh;
-  overflow-y: scroll;
+  overflow-y: hidden;
+}
+
+::-webkit-scrollbar{
+	display: none;
 }
 </style>

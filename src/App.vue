@@ -22,4 +22,7 @@ export default {
 ::-webkit-scrollbar{
 	display: none;
 }
+.ivu-table-wrapper{
+	margin-bottom: 30px !important;
+}
 </style>

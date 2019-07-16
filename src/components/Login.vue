@@ -143,7 +143,7 @@
                     if (valid) {
                         this.$Message.success('Success!');
 						this.$router.push({
-							name:'/Index',
+							name:'/Overview',
 							params:{
 								
 							}

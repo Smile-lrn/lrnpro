@@ -48,8 +48,9 @@
 			background: transparent !important;
 		}
 
-		.ivu-menu-vertical .ivu-menu-submenu .ivu-menu-item {
+		/deep/ .ivu-menu-vertical .ivu-menu-submenu .ivu-menu-item {
 			color: #8b97a2;
+			padding-left: 62px !important;
 		}
 
 		.layout-header-bar {
@@ -82,6 +83,9 @@
 				color: #fff;
 				cursor: pointer;
 			}
+		}
+		.layout-nav{
+			cursor: pointer;
 		}
 	}
 	.ivu-layout-has-sider {
@@ -160,33 +164,32 @@
 						<Submenu name="3">
 							<template slot="title">
 								<Icon class="l_iconfont l_iconicon_caigouguanli9"></Icon>
-								<span>货品管理</span>
+								<span>物联卡管理</span>
 							</template>
-							<MenuItem name="/Productpricing" @click.native="onSelected('/Productpricing', '货品定价')">货品定价</MenuItem>
-							<MenuItem name="/Goodsmanagement" @click.native="onSelected('/Goodsmanagement', '收货管理')">收货管理</MenuItem>
-							<MenuItem name="/Hhistorylist" @click.native="onSelected('/Hhistorylist', '历史货单')">历史货单</MenuItem>
+							<MenuItem name="/Unicomcard" @click.native="onSelected('/Unicomcard', '联通流量卡')">联通流量卡</MenuItem>
+							<MenuItem name="/Trafficcard" @click.native="onSelected('/Trafficcard', '移动流量卡')">移动流量卡</MenuItem>
+							<MenuItem name="/Telecommunicationcard" @click.native="onSelected('/Telecommunicationcard', '电信流量卡')">电信流量卡</MenuItem>
+							<MenuItem name="/Singleprepaid" @click.native="onSelected('/Singleprepaid', '单卡充值')">单卡充值</MenuItem>
+							<MenuItem name="/Batchtopup" @click.native="onSelected('/Batchtopup', '批量充值')">批量充值</MenuItem>
+							<MenuItem name="/Batchthrough" @click.native="onSelected('/Batchthrough', '批量划卡')">批量划卡</MenuItem>
 						</Submenu>
 						<Submenu name="4">
 							<template slot="title">
 								<Icon class="l_iconfont l_iconicon_caigouguanli"></Icon>
-								<span>库存管理</span>
+								<span>代理商管理</span>
 							</template>
-							<MenuItem name="/Inventorymanagement" @click.native="onSelected('/Inventorymanagement', '库存管理')">库存管理</MenuItem>
+							<MenuItem name="/Agentlist" @click.native="onSelected('/Agentlist', '代理商列表')">代理商列表</MenuItem>
+							<MenuItem name="/Addagent" @click.native="onSelected('/Addagent', '添加代理商')">添加代理商</MenuItem>
+
 						</Submenu>
 						<Submenu name="5">
 							<template slot="title">
 								<Icon class="l_iconfont l_iconicon_caigouguanli8"></Icon>
-								<span>食堂资料</span>
+								<span>操作日记</span>
 							</template>
-							<MenuItem name="/Canteeninfo" @click.native="onSelected('/Canteeninfo', '食堂资料')">食堂资料</MenuItem>
+							<MenuItem name="/Operatingadiary" @click.native="onSelected('/Operatingadiary', '操作日记')">操作日记</MenuItem>
 						</Submenu>
-						<Submenu name="6">
-							<template slot="title">
-								<Icon class="l_iconfont l_iconicon_caigouguanli2"></Icon>
-								<span>用户信息</span>
-							</template>
-							<MenuItem name="/Userinformation" @click.native="onSelected('/Userinformation', '用户信息')">用户信息</MenuItem>
-						</Submenu>
+						
 					</Menu>
 					<div slot="trigger"></div>
 				</Sider>
@@ -261,13 +264,13 @@ export default {
 					_this.onSelected('/Balancerecord', '余额记录');
 					return;
 				case '3':
-					_this.onSelected('/Productpricing', '货品定价');
+					_this.onSelected('/Unicomcard', '联通流量卡');
 					return;
 				case '4':
-					_this.onSelected('/Inventorymanagement', '库存管理');
+					_this.onSelected('/Agentlist', '代理商列表');
 					return;
 				case '5':
-					_this.onSelected('/Canteeninfo', '食堂资料');
+					_this.onSelected('/Operatingadiary', '操作日记');
 					return;
 				case '6':
 					_this.onSelected('/Userinformation', '用户信息');
@@ -292,13 +295,13 @@ export default {
 			this.breadcrumbItems = localStorage.getItem('breadcrumbItems');
 			switch (this.$route.name) {
 				case '/Supplierdetails':
-					this.activeName = '/Goodsmanagement';
+					this.activeName = '/Trafficcard';
 					return;
 				case '/Assess':
-					this.activeName = '/Goodsmanagement';
+					this.activeName = '/Trafficcard';
 					return;
 				case '/Goodsdetails':
-					this.activeName = '/Inventorymanagement';
+					this.activeName = '/Agentlist';
 					return;
 			}
 		},

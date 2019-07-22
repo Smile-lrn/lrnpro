@@ -1,4 +1,5 @@
 <style scoped lang="less">
+	// 整体布局
 	.layout {
 		border: 1px solid #d7dde4;
 		background: #f5f7f9;
@@ -62,6 +63,7 @@
 			font-weight: bold;
 		}
 	}
+	// 头部区域
 	.headerbox {
 		display: flex;
 		justify-content: space-between;
@@ -88,6 +90,7 @@
 			cursor: pointer;
 		}
 	}
+	// 侧边栏超出滚动
 	.ivu-layout-has-sider {
 		height: calc(100vh - 66px);
 		overflow-y: auto;
@@ -105,7 +108,7 @@
 		overflow: hidden !important;
 		transition: all 1s;
 	}
-
+	// 子路由区
 	.containerbox {
 		.ivu-layout-header {
 			padding-left: 20px;
@@ -118,6 +121,53 @@
 	::-webkit-scrollbar {
 		display: none;
 	}
+	// <!-- 设置区 -->
+	.tabboxs.active{
+		transition: all .6s;
+		height: 150px;
+		span{
+			color: #8b97a2;
+			transition: all 1s;
+		}
+	}
+	.tabboxs{
+		position: fixed;
+		// z-index: 99999;
+		display: flex;
+		flex-direction: column;
+		width: 124px;
+		height: 0px;
+		right: 1px;
+		top: 64px;
+		background: #fff;
+		background: #192940 !important;
+		color: #8b97a2;
+		justify-content: space-around;
+		padding-left: 10px;
+		cursor: pointer;
+		overflow: hidden;
+		transition: all .6s;
+		span{
+			transition: all .6s;
+			display: flex;
+			align-items: center;
+			font-size: 14px;
+			color: transparent;
+			&:hover{
+				color: #fff;
+			}
+		}
+	}
+	// 退出模态框
+	.logoutmodal .ivu-modal-wrap{
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		box-sizing: border-box;
+		.ivu-modal{
+			width: 300px;
+		}
+	}
 </style>
 <template>
 	<div class="layout">
@@ -129,12 +179,8 @@
 						<span>欢迎进入物联网管理后台</span>
 						<Icon @click.native="collapsedSider" :style="{ margin: '0 20px' }" type="md-menu" size="24"></Icon>
 					</div>
-					<div class="layout-nav" style="color: #fff;">
+					<div class="layout-nav" @click="opentabboxs" style="color: #fff;">
 						<span>欢迎你，123。当前余额：0.00</span>
-						<!-- <MenuItem name="1">
-							<Icon type="ios-navigate"></Icon>
-							Item 1
-						</MenuItem> -->
 					</div>
 				</Menu>
 			</Header>
@@ -189,7 +235,13 @@
 							</template>
 							<MenuItem name="/Operatingadiary" @click.native="onSelected('/Operatingadiary', '操作日记')">操作日记</MenuItem>
 						</Submenu>
-						
+						<Submenu name="6">
+							<template slot="title">
+								<Icon class="l_iconfont l_iconicon_caigouguanli8"></Icon>
+								<span>数据可视化</span>
+							</template>
+							<MenuItem name="/Echartspage" @click.native="onSelected('/Echartspage', '数据可视化展示')">数据可视化展示</MenuItem>
+						</Submenu>
 					</Menu>
 					<div slot="trigger"></div>
 				</Sider>
@@ -205,6 +257,20 @@
 				</Layout>
 			</Layout>
 		</Layout>
+		<!-- 设置区 -->
+		<div :class="tabboxs?'tabboxs active':'tabboxs'">
+			<span>修改登录密码</span>
+			<span>修改登二级密码</span>
+			<span>修改短信密码</span>
+			<span @click="logoutfun">退出</span>
+		</div>
+		<!-- 退出登录模态框 -->
+		<Modal class="logoutmodal"
+			title="后台管理系统"
+			v-model="modal10"
+			class-name="退出登录" @on-ok="confirmfun">
+			<p>确认退出本系统吗？</p>
+		</Modal>
 	</div>
 </template>
 <script>
@@ -213,13 +279,14 @@ export default {
 		return {
 			isCollapsed: true,
 			collapsibles: true,
-			Submenuname: '2',
+			Submenuname: '1',
 			activeName: '/Overview',
 			// navActive: '/Overview', //第一种方式渲染 右侧内容区域所需要渲染出的组件,
 			breadcrumbItems: '平台首页', //面包屑
 			accordion: true, //开启手风琴效果,
 			paramname: '', //内部跳转
-			modal10: false
+			modal10: false,
+			tabboxs:false
 		};
 	},
 	computed: {
@@ -234,7 +301,10 @@ export default {
 		// 侧边栏显示隐藏
 		collapsedSider() {
 			this.collapsibles = !this.collapsibles;
-			// this.$refs.side1.toggleCollapse();
+			this.$refs.side1.toggleCollapse();
+		},
+		opentabboxs(){
+			this.tabboxs = !this.tabboxs
 		},
 		// 侧边导航路由跳转
 		onSelected: function(name, breadcrumbItems) {
@@ -253,7 +323,6 @@ export default {
 		// 默认展开一级菜单时，选中第一项子菜单
 		onOpenChanged: function(params) {
 			var _this = this;
-			// console.log(params)
 			this.Submenuname = [params[0]];
 			localStorage.setItem('Submenuname', this.Submenuname);
 			switch (params[0]) {
@@ -272,14 +341,14 @@ export default {
 				case '5':
 					_this.onSelected('/Operatingadiary', '操作日记');
 					return;
-				case '6':
-					_this.onSelected('/Userinformation', '用户信息');
+				case '5':
+					_this.onSelected('/Echartspage', '数据可视化展示');
 					return;
+					
 			}
 		},
 		// 退出登录
 		logoutfun: function() {
-			// this.$store.commit('logout')
 			this.modal10 = true;
 		},
 		confirmfun() {
@@ -290,41 +359,19 @@ export default {
 				path: '/login'
 			});
 		},
-		// 激活二级菜单
+		// 刷新页面
 		setopenfun() {
+			// 面包屑
 			this.breadcrumbItems = localStorage.getItem('breadcrumbItems');
-			switch (this.$route.name) {
-				case '/Supplierdetails':
-					this.activeName = '/Trafficcard';
-					return;
-				case '/Assess':
-					this.activeName = '/Trafficcard';
-					return;
-				case '/Goodsdetails':
-					this.activeName = '/Agentlist';
-					return;
-			}
+			// 激活一级菜单
+			this.Submenuname = localStorage.getItem('Submenuname');
+			// 激活二级菜单
+			this.activeName = this.$route.name
 		},
-		// 获取商品分类
-		getcategory_list() {
-			// setcategory_list
-			var _this = this;
-			this.$post('/phone/Week/week_commodity', {
-				// token:this.$store.state.token
-			}).then(data => {
-				if (data.code == 1) {
-					if (data.data && data.data.category_list.length > 0) {
-						_this.$store.commit('setcategory_list', [
-							{
-								category_name: '请选择商品分类',
-								id: '请选择商品分类'
-							},
-							...data.data.category_list
-						]);
-					}
-				}
-			});
-		}
+	},
+	
+	created(){
+		this.setopenfun()
 	}
 };
 </script>

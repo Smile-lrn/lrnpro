@@ -13,7 +13,7 @@ import Batchthrough from '@/components/Cardmanagement/Batchthrough' //批量划�
 import Agentlist from '@/components/Agentmanagement/Agentlist' //代理商列表
 import Addagent from '@/components/Agentmanagement/Addagent' //代理商列表
 import Operatingadiary from '@/components/Operatingadiary/Operatingadiary' //操作日记
-
+import Echartspage from '@/components/Echartspage/Echartspage' //操作日记
 
 Vue.use(Router)
 
@@ -83,6 +83,11 @@ export default new Router({
 				path: '/Operatingadiary',
 				name: '/Operatingadiary',
 				component: Operatingadiary,
+			},
+			{
+				path: '/Echartspage',
+				name: '/Echartspage',
+				component: Echartspage,
 			},
 			
 		]

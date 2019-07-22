@@ -146,7 +146,8 @@
                     {
                         type: 'selection',
                         width: 60,
-                        align: 'center'
+                        align: 'center',
+						fixed:'left',
                     },
                     {
                         title: '金额',
@@ -167,7 +168,8 @@
                     },
                     {
                         title: '类型',
-                        key: 'types'
+                        key: 'types',
+						fixed:'right',
                     }
                 ],
                 data1: [

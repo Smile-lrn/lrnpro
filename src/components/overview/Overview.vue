@@ -111,6 +111,16 @@
 <template>
 	<div class="overviewbox">
 		<div class="vchartsbox"  :xs="20" :sm="12" :md="12" :lg='8' >
+			<div class="itembox" style="width: 0;overflow: hidden;">
+				<p>联通流量卡</p>
+				<chart ref="chart1"  :options="orgOptions1" :auto-resize="true"></chart>
+				<Select v-model="model1" @on-change="onChagefun">
+					<Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+				</Select>
+				<span class="numbox">
+					数量：{{model1}}
+				</span>
+			</div>
 			<div class="itembox">
 				<p>联通流量卡</p>
 				<chart ref="chart1"  :options="orgOptions1" :auto-resize="true"></chart>
@@ -229,13 +239,6 @@ export default {
 				{ value: 335, name: '联通01' },
 				{ value: 310, name: '联通02' },
 				{ value: 335, name: '联通03' },
-				{ value: 310, name: '联通04' },
-				{ value: 335, name: '联通05' },
-				{ value: 310, name: '联通06' },
-				{ value: 335, name: '联通07' },
-				{ value: 310, name: '联通08' },{ value: 335, name: '联通011' },
-				{ value: 310, name: '联通092' },
-				
 			]
 		};
 	},
@@ -293,7 +296,7 @@ export default {
 	created() {
 		//显示第一个日财务支出
 		this.overcontent = this.Overviewday;
-		this.setCharts('orgOptions1',this.data1,this.data2)
+		this.setCharts('orgOptions1',this.data1,this.data2,this.color1)
 		this.setCharts('orgOptions2', ['移动01', '移动02' ],[
 				{ value: 335, name: '移动01' },
 				{ value: 310, name: '移动02' },

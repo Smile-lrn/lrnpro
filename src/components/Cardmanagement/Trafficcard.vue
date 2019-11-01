@@ -133,39 +133,38 @@
     </div>
 </template>
 <script>
-	
     export default {
         data () {
             return {
 				labelinvalue:true,
 				money:'',
-				model1:'请选择类型',
+				model1:'请选择状态',
 				iccid:'',
 				starticcid:'',
 				endiccid:'',
 				typelist1:[
 					{
-					"id":'请选择类型', //供货商id
-					"user_name": "请选择类型" //供货商名称
+					"id":'请选择状态', 
+					"user_name": "请选择状态" 
 					},{
-						"id":'1', //供货商id
-						"user_name": "上级充值" //供货商名称
+						"id":'1', 
+						"user_name": "正常" 
 					},{
-						"id":'2', //供货商id
-						"user_name": "下级扣费" //供货商名称
+						"id":'2', 
+						"user_name": "停机" 
 					},{
-						"id":'3', //供货商id
-						"user_name": "后台充值套餐" //供货商名称
+						"id":'3', 
+						"user_name": "沉默" 
 					},{
-						"id":'4', //供货商id
-						"user_name": "总后台扣除" //供货商名称
+						"id":'4', 
+						"user_name": "断网" 
 					},{
-						"id":'5', //供货商id
-						"user_name": "自动充值" //供货商名称
-					}
+						"id":'5', 
+						"user_name": "带激活" 
+					},
 				] ,
                 model2:'0',
-                model3:'5',
+                model3:'10',
 				yidongpickers: [
                 	{
                 		value: '0',
@@ -178,13 +177,23 @@
                 ],
                 telecompickers: [
                 	{
-                		value: '5',
-                		label: '每页条数'
-                	},
-                	{
                 		value: '10',
-                		label: '10'
-                	},
+                		label: '每页展示条数10'
+                	},{
+                		value: '20',
+                		label: '每页展示条数20'
+					},
+					{
+                		value: '50',
+                		label: '每页展示条数50'
+					},
+					{
+                		value: '100',
+                		label: '每页展示条数100'
+                	},{
+                		value: '200',
+                		label: '每页展示条数200'
+                	}
                 ],
 				columns4: [
 					// 	所属代理	当前套餐已使用(MB)	状态	备注	api	操作
@@ -210,15 +219,16 @@
                         title: '状态',
                         key: 'types'
                     },
-					
-					{
-					    title: '备注',
-					    key: 'remark',
-						tooltip:true
-					},
 					{
 					    title: 'api',
 					    key: 'api'
+					},
+
+					
+					{
+					    title: '绑定号',
+					    key: 'remark',
+						tooltip:true
 					},
 					
 					{
@@ -230,18 +240,20 @@
                     {
                         money: '50.00',
                         remark: '充值话费50元，优惠2元充值话费50元，优惠2元充值话费50元，优惠2元',
-                        changedmoney: '48.00',
-						datetime:'2019-07-01',
-						types:'支付宝',
+                        changedmoney: '小伟',
+						datetime:'0',
+						types:'03联通B',
+						iccid:'8986061911001512717',
 						id:1,
                     },
                     {
                         money: '10.00',
-                        remark: '充值话费2元，优惠8元',
-                        changedmoney: '2.00',
-                    	datetime:'2019-07-05',
+                        remark: '04联通',
+                        changedmoney: '贺阳',
+                    	datetime:'1',
                     	types:'微信',
-                    	id:2,
+						id:2,
+						iccid:'8986061911001512715',
                     }
                 ]
             }

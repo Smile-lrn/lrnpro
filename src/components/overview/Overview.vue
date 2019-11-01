@@ -161,11 +161,11 @@
 			<Collapse v-model="collapsevalue" accordion>
 				<Panel name="1">
 					<div class="titlebox">
-						<span class="tit">七月 您好！物联网平台为更好的服务物联网项目发展不懈努力！</span>
+						<span class="tit">给代理商设置价格不知道这个卡属于哪一个通道怎么办？很简单，点击“单卡充值”把卡号输入进去就可以看到了！</span>
 						<span class="date">2019-07-10 13:03</span>
 						<!-- <span class="btn">查看</span> -->
 					</div>
-					<p slot="content">史蒂夫·乔布斯（Steve Jobs），1955年2月24日生于美国加利福尼亚州旧金山，美国发明家、企业家、美国苹果公司联合创办人。</p>
+					<p slot="content">给代理商设置价格不知道这个卡属于哪一个通道怎么办？很简单，点击“单卡充值”把卡号输入进去就可以看到了！</p>
 				</Panel>
 				<Panel name="2">
 					斯蒂夫·盖瑞·沃兹尼亚克

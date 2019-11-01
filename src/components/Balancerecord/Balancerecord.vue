@@ -104,9 +104,11 @@
 					<Select v-model="model1" :label-in-value="labelinvalue" style="width:200px" @on-change="choosecategory">
 						<Option style="text-align: left;" v-for="item in typelist1" :value="item.id" :key="item.user_name">{{ item.user_name }}</Option>
 					</Select>
-					<DatePicker type="daterange" @on-change="choosedate" show-week-numbers placeholder="选择开始-截止时间" style="width: 200px"></DatePicker>
+					<!-- <DatePicker type="daterange" @on-change="choosedate" show-week-numbers placeholder="选择开始-截止时间" style="width: 200px"></DatePicker> -->
+					<DatePicker type="date" @on-change="choosedateStart" show-week-numbers placeholder="选择开始时间" style="width: 200px"></DatePicker>
+					<DatePicker type="date" @on-change="choosedateEnd" show-week-numbers placeholder="选择截止时间" style="width: 200px"></DatePicker>					
 					<input type="text" v-model="money" placeholder="请输入金额">
-					<Button type="primary" style="margin-right: 20px;" size="large" @click="exportData(1)">搜索</Button>
+					<Button type="primary" style="margin-right: 20px;" size="large" >搜索</Button>
 					<Button type="primary" size="large" @click="exportData(1)"><Icon type="ios-download-outline"></Icon>导出数据</Button>
 			</div>
 		</div>
@@ -121,6 +123,8 @@
 				labelinvalue:true,
 				money:'',
 				model1:'请选择类型',
+				startTime:'',
+				endTime:'',
 				typelist1:[
 					{
 					"id":'请选择类型', //供货商id
@@ -178,15 +182,15 @@
                         remark: '充值话费50元，优惠2元充值话费50元，优惠2元充值话费50元，优惠2元',
                         changedmoney: '48.00',
 						datetime:'2019-07-01',
-						types:'支付宝',
+						types:'下级扣费',
 						id:1,
                     },
                     {
                         money: '10.00',
-                        remark: '充值话费2元，优惠8元',
+                        remark: '上级为您充值',
                         changedmoney: '2.00',
                     	datetime:'2019-07-05',
-                    	types:'微信',
+                    	types:'上级充值',
                     	id:2,
                     }
                 ]
@@ -199,8 +203,28 @@
 				console.log(val)
 			},
 			// 选择日期
-			choosedate(dateobj){
+			choosedateStart(dateobj){
+				this.startTime = dateobj;
+				if(this.startTime>this.endTime && this.endTime && this.startTime){
+					this.$Message.info({
+						'content': '开始时间不能大于截止时间!',
+						duration: 5,
+    					closable: true
+					});
+					return
+				}
+			},
+			choosedateEnd(dateobj){
 				console.log(dateobj)
+				this.endTime = dateobj;
+				if(this.startTime>this.endTime && this.startTime && this.endTime){
+					this.$Message.info({
+						'content': '开始时间不能大于截止时间!',
+						duration: 5,
+    					closable: true
+					});
+					return
+				}
 			},
 			// 全选
             handleSelectAll (status) {

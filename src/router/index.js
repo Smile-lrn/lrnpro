@@ -7,6 +7,7 @@ import Balancerecord from '@/components/Balancerecord/Balancerecord' //余额记
 import Unicomcard from '@/components/Cardmanagement/Unicomcard' //联通流量卡
 import Trafficcard from '@/components/Cardmanagement/Trafficcard' //移动流量卡
 import Telecommunicationcard from '@/components/Cardmanagement/Telecommunicationcard' //电信流量卡
+import Detail from '@/components/Cardmanagement/Detail' //列表充值查询页面
 import Singleprepaid from '@/components/Cardmanagement/Singleprepaid' //单卡充值
 import Batchtopup from '@/components/Cardmanagement/Batchtopup' //批量充值
 import Batchthrough from '@/components/Cardmanagement/Batchthrough' //批量划卡
@@ -53,6 +54,11 @@ export default new Router({
 				path: '/Telecommunicationcard',
 				name: '/Telecommunicationcard',
 				component: Telecommunicationcard,
+			},
+			{
+				path: '/Detail',
+				name: '/Detail',
+				component: Detail,
 			},
 			{
 				path: '/Singleprepaid',

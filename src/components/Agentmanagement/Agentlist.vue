@@ -105,6 +105,9 @@
 				<input type="text" v-model="money" placeholder="请输入姓名">
 				<input type="phone" v-model="money" placeholder="手机号">
 				<input type="email" v-model="money" placeholder="邮箱">
+				<Select v-model="model_show" style="width:200px">
+					<Option v-for="item in isShowarr" :value="item.value" :key="item.value">{{ item.label }}</Option>
+				</Select>
 				<Button type="primary" style="margin-right: 20px;" size="large" @click="exportData(1)">搜索</Button>
 			</div>
 		</div>
@@ -120,6 +123,21 @@
     export default {
         data () {
             return {
+				model_show:'',
+				isShowarr:[
+					{
+						value: '',
+                        label: '请选择'
+					},
+                    {
+                        value: '0',
+                        label: '不显示'
+                    },
+                    {
+                        value: '1',
+                        label: '显示'
+                    }
+				],
 				labelinvalue:true,
 				money:'',
                 columns4: [
@@ -148,6 +166,10 @@
                     {
                         title: '邮箱',
                         key: 'types'
+					},
+                    {
+                        title: '显示佣金',
+                        key: 'xsyj'
                     },
 					{
 					    title: '操作',

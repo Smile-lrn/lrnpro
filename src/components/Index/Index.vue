@@ -301,7 +301,7 @@ export default {
 		// 侧边栏显示隐藏
 		collapsedSider() {
 			this.collapsibles = !this.collapsibles;
-			this.$refs.side1.toggleCollapse();
+			// this.$refs.side1.toggleCollapse();
 		},
 		opentabboxs(){
 			this.tabboxs = !this.tabboxs

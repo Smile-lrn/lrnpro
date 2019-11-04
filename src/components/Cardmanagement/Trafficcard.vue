@@ -94,6 +94,55 @@
 				color: #fff;
 			}
 		}
+		.detailBox{
+			position: fixed;
+			top: 0;
+			left: 0;
+			bottom: 0;
+			right: 0;
+			background: rgba(0, 0, 0, .6);
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			z-index: 999999;
+			.detailItem{
+				width: 60%;
+				height: 400px;
+				background: #fff;
+				border-radius: 10px;
+				padding: 30px;
+				p{
+					font-size: 18px;
+					display: flex;
+					justify-content: space-between;
+					span.right{
+						border-radius: 50%;
+						width: 30px;
+						height: 30px;
+						display: flex;
+						justify-content: center;
+						cursor: pointer;
+					}
+				}
+				>div{
+					height: 340px;
+					overflow-y: scroll;
+				}
+				/deep/ table{
+					width: 100%;
+					th,td{
+						width: 25%;
+						height: 40px;
+						text-align: center;
+						border-bottom: 1px solid #ebebeb !important;
+					}
+
+					th{
+						border-bottom:2px solid #ebebeb; 
+					}
+				}
+			}
+		}
 	}
 	
 </style>
@@ -125,11 +174,41 @@
 			</div>
 		</div>
         <Table border ref="selection" :columns="columns4" :data="data1" >
-			<template slot="operation" slot-scope="{ row,column, index }">
-				<span>查看</span>
+			<template slot="operation" slot-scope="{ row,column, index }" >
+				<span style="padding:5px 3px;background-color: #71d398;color:#fff;border-radius:4px;cursor:pointer;" @click="topUpfun(row,index)">查看</span>
+				<span style="padding:5px 3px;background-color: #f4b162;color:#fff;border-radius:4px;cursor:pointer;" @click="getDetail(row,index)">套餐明细</span>
 			</template>
 		</Table>
 		<Page :total="100" show-elevator />
+		<div class="detailBox" v-if="detailFlag">
+			<div class="detailItem">
+				<p class="detailtile">
+					<span>套餐列表</span>
+					<span class="right" @click="closeDetail">X</span>
+				</p>
+				<hr>
+				<div>
+					<table>
+						<thead>
+							<tr>
+								<th>订购时间</th>
+								<th>套餐</th>
+								<th>期间使用流量</th>
+								<th>有效期</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="(item,index) in 10" :key="index">
+								<td>2019-10-01</td>
+								<td>1GB</td>
+								<td>100MB</td>
+								<td>2019-12-01</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
     </div>
 </template>
 <script>
@@ -255,7 +334,8 @@
 						id:2,
 						iccid:'8986061911001512715',
                     }
-                ]
+				],
+				detailFlag:false
             }
         },
         methods: {
@@ -290,7 +370,24 @@
                         data: this.data7.filter((data, index) => index < 4)
                     });
                 }
-            }      
+			},
+						//充值
+			topUpfun:function(row,index){
+				this.$router.push({
+					name: '/Detail',
+					params:{
+						type:'ck'
+					}
+				});
+			},
+			// 套餐明细
+			getDetail:function(row,index){
+				this.detailFlag = true;
+			},  
+			// 关闭弹窗
+			closeDetail:function(row,index){
+				this.detailFlag = false;
+			},    
         }
     }
 </script>

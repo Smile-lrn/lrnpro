@@ -29,14 +29,14 @@
                 <Input v-model="formLeft.input5" disabled="disabled"></Input>
             </FormItem>
             <!-- 查询时无请选择套餐 -->
-            <FormItem label="请选择套餐">
+            <FormItem label="请选择套餐"  v-if="tem_params.type=='cz'">
                 <Select v-model="model6" style="width:200px">
                     <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </Select>
             </FormItem> 
         </Form>
         <!-- 查询时无充值按钮-->
-        <div class="btnbox">
+        <div class="btnbox" v-if="tem_params.type=='cz'">
             <Button type="primary" style="margin:30px 100px;">充值</Button>
         </div>
     </div>
@@ -80,7 +80,13 @@
                     }
                 ],
                 model6: '',
+                tem_params:'',
             }
+        },
+        created(){
+            console.log(this.$route.params)
+            var tem_params = this.$route.params;
+            this.tem_params = tem_params;
         }
     }
 </script>

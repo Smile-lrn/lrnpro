@@ -56,7 +56,7 @@ export default new Router({
 				component: Telecommunicationcard,
 			},
 			{
-				path: '/Detail',
+				path: '/Detail/:type',
 				name: '/Detail',
 				component: Detail,
 			},

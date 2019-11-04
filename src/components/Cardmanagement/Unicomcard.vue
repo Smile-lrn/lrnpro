@@ -364,8 +364,10 @@
 			//充值
 			topUpfun:function(row,index){
 				this.$router.push({
-					path: '/Detail',
-					type: 'cz'
+					name: '/Detail',
+					params:{
+						type:'cz'
+					}
 				});
 			},
 			// 套餐明细

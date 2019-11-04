@@ -90,8 +90,6 @@
 			<Steps :current="current" status="wait">
 				<Step title="绑定号/iccid"></Step>
 				<Step title="步骤2"></Step>
-				<Step title="步骤3"></Step>
-				<Step title="步骤4"></Step>
 			</Steps>
 		</div>
 		<!-- 步骤内容板块 -->
@@ -113,46 +111,21 @@
 				</Select>
 			</div>
 			<div class="stepone" v-if="current==1">
-				<h3>◆ 选择套餐</h3>
-				<div class="grouplist">
-					<div class="groupbox">
-						<span>例如：1000000001-1000000002 如需划一张，开始iccid和结束iccd一样 </span>
-						<input type="text" placeholder="请输入开始ICCID">
-					</div>
-					<div class="groupbox">
-						<span>例如：1000000001 </span>
-						<input type="text" placeholder="请输入结束ICCID">
-					</div>
-				</div>
-			</div>
-			<div class="stepone" v-if="current==2">
-				<h3>◆ 步骤3</h3>
-				<div class="grouplist">
-					<div class="groupbox">
-						<span>例如：1000000001-1000000002 如需划一张，开始iccid和结束iccd一样 </span>
-						<input type="text" placeholder="请输入开始ICCID">
-					</div>
-					<div class="groupbox">
-						<span>例如：1000000001 </span>
-						<input type="text" placeholder="请输入结束ICCID">
-					</div>
-				</div>
-			</div>
-			<div class="stepone" v-if="current==3">
-				<h3>◆ 步骤4</h3>
-				<div class="grouplist">
-					<div class="groupbox">
-						<span>例如：1000000001-1000000002 如需划一张，开始iccid和结束iccd一样 </span>
-						<input type="text" placeholder="请输入开始ICCID">
-					</div>
-					<div class="groupbox">
-						<span>例如：1000000001 </span>
-						<input type="text" placeholder="请输入结束ICCID">
-					</div>
+				<Form :model="formLeft" label-position="left" :label-width="100">
+					<FormItem label="数量">
+						<Input v-model="formLeft.input1" disabled="disabled"></Input>
+					</FormItem>
+					<FormItem label="划给">
+						<Input v-model="formLeft.input2" disabled="disabled"></Input>
+					</FormItem>
+				</Form>
+				<!-- 查询时无充值按钮-->
+				<div class="btnbox">
+					<Button type="primary" style="margin:30px 100px;">确定划卡</Button>
 				</div>
 			</div>
 			<Button  v-if="current!=0"  type="primary" @click="prefun">上一步</Button>
-			<Button  v-if="current!=3"  type="primary" @click="next">下一步</Button>
+			<Button  v-if="current!=1"  type="primary" @click="next">下一步</Button>
 
 		</div>
 	</div>
@@ -163,6 +136,10 @@
 			return {
 				current:0,
 				labelinvalue:true,
+				formLeft: {
+                    input1: '3',
+                    input2: '鹤洋（100013）',
+                },
 				model1:'请选择代理商',
 				typelist1:[
 					{
@@ -200,7 +177,7 @@
 				}
 			},
 			next() {
-				if (this.current >= 3) {
+				if (this.current >= 1) {
 					this.current = 0;
 				} else {
 					this.current += 1;

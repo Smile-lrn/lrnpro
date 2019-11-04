@@ -94,6 +94,41 @@
 				color: #fff;
 			}
 		}
+		.oprationbox{
+			span{
+				padding: 5px 3px;
+				color:#fff;
+				margin-bottom: 3px;
+				display: block;
+				float: left;
+				margin-right: 5px;
+				border-radius: 3px;
+				&.green{
+					background: #71d398;
+				}
+				&.orange{
+					background:#f4b162 ;
+				}
+			}
+		}
+		.editbox{
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			z-index: 9999;
+			background: rgba(0,0,0,.6);
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			.formbox{
+				width: 550px;
+				background: #fff;
+				padding: 50px;
+				border-radius: 10px;
+			}
+		}
 	}
 	
 </style>
@@ -113,16 +148,82 @@
 		</div>
         <Table border ref="selection" :columns="columns4" :data="data1" >
 			<template slot="operation" slot-scope="{ row,column, index }">
-				<span style="cursor: pointer;">查看</span>
+				<div class="oprationbox">
+					<span class="green" @click="updateAgent(row,index)">修改</span>
+					<span class="orange" @click="setPricefun(row,index)">售价</span>
+					<span class="green">充值</span>
+					<span class="orange">流量卡</span>
+				</div>
 			</template>
 		</Table>
 		<Page :total="100" show-elevator />
+		<div class="editbox" v-if="editboxFlag">
+			<Col class="formbox"  >
+				<Form ref="formCustom" :model="formCustom" :rules="ruleCustom" :label-width="80">
+					<FormItem label="登录账号" prop="accountnumber">
+						<Input type="text" v-model="formCustom.accountnumber" disabled="disabled"></Input>
+					</FormItem>
+					<FormItem label="密码" prop="passwd">
+						<Input type="password" v-model="formCustom.passwd"></Input>
+					</FormItem>
+					<FormItem label="姓名" prop="name">
+						<Input type="text" v-model="formCustom.name"></Input>
+					</FormItem>
+					<FormItem label="手机号" prop="phonenumber">
+						<Input type="text" v-model="formCustom.phonenumber" number></Input>
+					</FormItem>
+					<FormItem label="邮箱" prop="emails">
+						<Input type="email" v-model="formCustom.emails" ></Input>
+					</FormItem>
+					<FormItem>
+						<Button type="primary" @click="handleSubmit('formCustom')">确定</Button>
+						<Button @click="handleReset('formCustom')" style="margin-left: 8px">取消</Button>
+					</FormItem>
+				</Form>
+			</Col>
+		</div>
     </div>
 </template>
 <script>
     export default {
         data () {
+ 			const validatePass = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请输入密码'));
+                } else {
+                    callback();
+                }
+            };
+            const validatename = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('姓名不可以为空哟~'));
+                }else {
+                    callback();
+                }
+            };
+            const validateAge = (rule, value, callback) => {
+                if (!value) {
+                    return callback(new Error('登录账号不可以为空哟~'));
+                }else {
+                    callback();
+                }
+            };
+			const validatePhonenumber = (rule, value, callback) => {
+			    if (!value) {
+			        return callback(new Error('手机号不可以为空哟~'));
+			    }else {
+                    callback();
+                }
+			};
+			const validateemail = (rule, value, callback) => {
+			    if (!value) {
+			        return callback(new Error('邮箱不可以为空哟~'));
+			    }else {
+			        callback();
+			    }
+			};
             return {
+				editboxFlag:false,
 				model_show:'',
 				isShowarr:[
 					{
@@ -176,7 +277,38 @@
 					    slot: 'operation'
 					}
                 ],
-                data1: []
+                data1: [{
+					money:'heyang',
+					remark:'贺阳',
+					changedmoney:'0.00',
+					datetime:'13203715363',
+					xsyj:'显示',
+					types:"13203715363@163.com"
+				}],
+				formCustom: {
+                    passwd: '',
+                    name: '',
+                    accountnumber: '',
+					phonenumber:'',
+					emails:''
+                },
+                ruleCustom: {
+                    passwd: [
+                        { validator: validatePass, trigger: 'blur' }
+                    ],
+                    name: [
+                        { validator: validatename, trigger: 'blur' }
+                    ],
+                    accountnumber: [
+                        { validator: validateAge, trigger: 'blur' }
+                    ],
+					phonenumber: [
+                        { validator: validatePhonenumber, trigger: 'blur' }
+                    ],
+					emails: [
+                        { validator: validateemail, trigger: 'blur' }
+                    ],
+                }
             }
         },
         methods: {
@@ -211,7 +343,32 @@
                         data: this.data7.filter((data, index) => index < 4)
                     });
                 }
-            }      
+			},
+			// 修改
+			updateAgent:function(row,index){
+				this.editboxFlag = true
+			},
+			// 设置售价
+			setPricefun:function(row,index){
+				this.$router.push({
+					name:'/Sellingprice',
+					params:{
+						id:1
+					}
+				})
+			},
+			handleSubmit (name) {
+                this.$refs[name].validate((valid) => {
+                    if (valid) {
+                        this.$Messaccountnumber.success('Success!');
+                    } else {
+                        this.$Messaccountnumber.error('Fail!');
+                    }
+                })
+            },
+            handleReset (name) {
+                this.editboxFlag = false;
+            }     
         }
     }
 </script>

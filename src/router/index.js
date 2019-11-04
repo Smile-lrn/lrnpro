@@ -13,6 +13,7 @@ import Batchtopup from '@/components/Cardmanagement/Batchtopup' //批量充值
 import Batchthrough from '@/components/Cardmanagement/Batchthrough' //批量划卡
 import Agentlist from '@/components/Agentmanagement/Agentlist' //代理商列表
 import Addagent from '@/components/Agentmanagement/Addagent' //代理商列表
+import Sellingprice from '@/components/Agentmanagement/Sellingprice' //代理商售价设置
 import Operatingadiary from '@/components/Operatingadiary/Operatingadiary' //操作日记
 import Echartspage from '@/components/Echartspage/Echartspage' //操作日记
 
@@ -81,7 +82,7 @@ export default new Router({
 				component: Agentlist,
 			},
 			{
-				path: '/Addagent',
+				path: '/Addagent/:type',
 				name: '/Addagent',
 				component: Addagent,
 			},
@@ -95,6 +96,12 @@ export default new Router({
 				name: '/Echartspage',
 				component: Echartspage,
 			},
+			{
+				path: '/Sellingprice/:id',
+				name: '/Sellingprice',
+				component: Sellingprice,
+			},
+			
 			
 		]
 	},

@@ -95,12 +95,6 @@
 				 
 			}
 		}
-		.setpricebox{
-			p{
-				height: 40px;
-				text-align: right;
-			}
-		}
 	}
 	
 </style>
@@ -123,13 +117,26 @@
             </p>
         </div>
 		<Table :columns="columns" :data="data">
-			<template slot-scope="{ row, index }" slot="otherprice">
-				<Input type="text" v-model="row.otherprice" />
+			<template slot-scope="{ row, index }" slot="name">
+			<Input type="text" v-model="editName" v-if="editIndex === index" />
+			<span v-else>{{ row.name }}</span>
 			</template>
 
-			<template slot-scope="{ row, index }" slot="pcprice">
-				<Input type="text" v-model="row.pcprice" />
+			<template slot-scope="{ row, index }" slot="age">
+			<Input type="text" v-model="editAge" v-if="editIndex === index" />
+			<span v-else>{{ row.age }}</span>
 			</template>
+
+			<template slot-scope="{ row, index }" slot="birthday">
+			<Input type="text" v-model="editBirthday" v-if="editIndex === index" />
+			<span v-else>{{ getBirthday(row.birthday) }}</span>
+			</template>
+
+			<template slot-scope="{ row, index }" slot="address">
+			<Input type="text" v-model="editAddress" v-if="editIndex === index" />
+			<span v-else>{{ row.address }}</span>
+			</template>
+
 			<template slot-scope="{ row, index }" slot="action">
 			<div v-if="editIndex === index">
 				<Button @click="handleSave(index)">保存</Button>
@@ -140,7 +147,6 @@
 			</div>
 			</template>
 		</Table>
-		<Page :total="100" show-elevator />
     </div>
 </template>
 <script>
@@ -185,28 +191,20 @@
                 ],
 				columns: [
 					{
-						title: 'API',
-						key: 'api'
+						title: '姓名',
+						slot: 'name'
 					},
 					{
-						title: '套餐',
-						key: 'taocan'
+						title: '年龄',
+						slot: 'age'
 					},
 					{
-						title: '有效期',
-						key: 'yxq'
+						title: '出生日期',
+						slot: 'birthday'
 					},
 					{
-						title: '我的成本价格',
-						key: 'myprice'
-					},
-					{
-						title: '代理成本价格',
-						slot: 'otherprice'
-					},
-					{
-						title: '终端价格',
-						slot: 'pcprice'
+						title: '地址',
+						slot: 'address'
 					},
 					{
 						title: '操作',
@@ -215,13 +213,28 @@
 					],
 					data: [
 					{
-						api: '02联通',
-						taocan: '500M',
-						yxq: '一个月',
-						myprice: '5.25',
-						otherprice:'5.20',
-						pcprice:'6.66',
-						id:1
+						name: '王小明',
+						age: 18,
+						birthday: '919526400000',
+						address: '北京市朝阳区芍药居'
+					},
+					{
+						name: '张小刚',
+						age: 25,
+						birthday: '696096000000',
+						address: '北京市海淀区西二旗'
+					},
+					{
+						name: '李小红',
+						age: 30,
+						birthday: '563472000000',
+						address: '上海市浦东新区世纪大道'
+					},
+					{
+						name: '周小伟',
+						age: 26,
+						birthday: '687024000000',
+						address: '深圳市南山区深南大道'
 					}
 					],
 					editIndex: -1,  // 当前聚焦的输入框的行数
@@ -233,6 +246,18 @@
         },
         methods: {
 			onChagefun(){},
+			// 选择类型
+			choosecategory(val){
+				console.log(val)
+			},
+			// 选择日期
+			choosedate(dateobj){
+				console.log(dateobj)
+			},
+			// 全选
+            handleSelectAll (status) {
+                this.$refs.selection.selectAll(status);
+            },
 			// 导出表格数据
 			exportData (type) {
                 if (type === 1) {
@@ -252,6 +277,23 @@
                     });
                 }
 			},
+			//充值
+			topUpfun:function(row,index){
+				this.$router.push({
+					name: '/Detail',
+					params:{
+						type:'cz'
+					}
+				});
+			},
+			// 套餐明细
+			getDetail:function(row,index){
+				this.detailFlag = true;
+			},
+			// 关闭弹窗
+			closeDetail:function(row,index){
+				this.detailFlag = false;
+			},
 			handleEdit (row, index) {
 				this.editName = row.name;
 				this.editAge = row.age;
@@ -265,7 +307,6 @@
 				this.data[index].birthday = this.editBirthday;
 				this.data[index].address = this.editAddress;
 				this.editIndex = -1;
-				console.log(this.data)
 			},
 			getBirthday (birthday) {
 				const date = new Date(parseInt(birthday));

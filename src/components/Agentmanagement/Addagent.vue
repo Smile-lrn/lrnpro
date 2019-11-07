@@ -22,6 +22,16 @@
 				<FormItem label="邮箱" prop="emails">
 					<Input type="email" v-model="formCustom.emails" ></Input>
 				</FormItem>
+                <FormItem label="显示佣金">
+					<Select v-model="model2" @on-change="onChagefun"  style="width:200px">
+                        <Option v-for="item in showarr" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    </Select>
+				</FormItem>
+                <FormItem label="状态">
+                    <Select v-model="model3" @on-change="onChagefun"  style="width:200px">
+                        <Option v-for="item in showarr_1" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    </Select>
+				</FormItem>
 				<FormItem>
 					<Button type="primary" @click="handleSubmit('formCustom')">确定</Button>
 					<Button @click="handleReset('formCustom')" style="margin-left: 8px">重置</Button>
@@ -93,7 +103,23 @@
 					emails: [
                         { validator: validateemail, trigger: 'blur' }
                     ],
-                }
+                },
+                model2:'1',
+                showarr:[{
+                    value:'1',
+                    label:"显示"
+                },{
+                    value:'0',
+                    label:"不显示"
+                }],
+                model3:'1',
+                showarr_1:[{
+                    value:'1',
+                    label:"正常"
+                },{
+                    value:'0',
+                    label:"禁用"
+                }]
             }
         },
         methods: {

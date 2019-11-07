@@ -129,6 +129,9 @@
 				border-radius: 10px;
 			}
 		}
+		/deep/ .ivu-form .ivu-form-item-label{
+			text-align: left;
+		}
 	}
 	
 </style>
@@ -151,7 +154,7 @@
 				<div class="oprationbox">
 					<span class="green" @click="updateAgent(row,index)">修改</span>
 					<span class="orange" @click="setPricefun(row,index)">售价</span>
-					<span class="green">充值</span>
+					<span class="green" @click="setTopup(row,index)">充值</span>
 					<span class="orange">流量卡</span>
 				</div>
 			</template>
@@ -174,6 +177,16 @@
 					</FormItem>
 					<FormItem label="邮箱" prop="emails">
 						<Input type="email" v-model="formCustom.emails" ></Input>
+					</FormItem>
+					<FormItem label="显示佣金">
+						<Select v-model="model2" @on-change="onChagefun"  style="width:200px">
+                        	<Option v-for="item in showarr" :value="item.value" :key="item.value">{{ item.label }}</Option>
+						</Select>
+					</FormItem>
+					<FormItem label="状态">
+						<Select v-model="model3" @on-change="onChagefun"  style="width:200px">
+							<Option v-for="item in showarr_1" :value="item.value" :key="item.value">{{ item.label }}</Option>
+						</Select>
 					</FormItem>
 					<FormItem>
 						<Button type="primary" @click="handleSubmit('formCustom')">确定</Button>
@@ -308,7 +321,23 @@
 					emails: [
                         { validator: validateemail, trigger: 'blur' }
                     ],
-                }
+                },
+                model2:'1',
+                showarr:[{
+                    value:'1',
+                    label:"显示"
+                },{
+                    value:'0',
+                    label:"不显示"
+                }],
+                model3:'1',
+                showarr_1:[{
+                    value:'1',
+                    label:"正常"
+                },{
+                    value:'0',
+                    label:"禁用"
+                }]
             }
         },
         methods: {
@@ -352,6 +381,15 @@
 			setPricefun:function(row,index){
 				this.$router.push({
 					name:'/Sellingprice',
+					params:{
+						id:1
+					}
+				})
+			},
+			// 充值
+			setTopup:function(row,index){
+				this.$router.push({
+					name:'/Agenttopup',
 					params:{
 						id:1
 					}

@@ -43,7 +43,7 @@
           <Input v-model="formLeft.input5" disabled="disabled"></Input>
         </FormItem>
         <FormItem label="当前余额">
-          <Input v-model="formLeft.input6" disabled="disabled"></Input>
+          <Input v-model="formLeft.input6" disabled="disabled" /></Input>
         </FormItem>
         <!-- 查询时无请选择套餐 -->
         <FormItem label="充值金额">

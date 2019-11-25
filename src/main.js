@@ -4,6 +4,9 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import iView from 'iview';
+import {post} from './assets/js/httpRequestUtil.js'
+import {comFilters} from './assets/js/common.js'
+import moment from 'moment/moment'
 import './assets/font/iconfont.css'
 import 'iview/dist/styles/iview.css';
 // import './assets/common.less'
@@ -11,6 +14,7 @@ import Vuex from 'vuex'
 import store from './store'
 import ECharts from 'vue-echarts/components/ECharts'
 import 'echarts/lib/chart/pie'
+
 
 
 Vue.config.productionTip = false

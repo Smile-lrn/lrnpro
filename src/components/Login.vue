@@ -73,8 +73,8 @@
 			    <FormItem label="账 号" prop="account">
 			        <Input type="text" v-model="formCustom.account" />
 			    </FormItem>
-			    <FormItem label="密 码" prop="passwdCheck">
-			        <Input type="password" v-model="formCustom.passwdCheck" />
+			    <FormItem label="密 码" prop="password">
+			        <Input type="password" v-model="formCustom.password" />
 			    </FormItem>
 			    <FormItem label="验证码" prop="age">
 			        <Input type="text" v-model="formCustom.age" number>
@@ -120,14 +120,13 @@
                 formCustom: {
 					account:'',
                     passwd: '',
-                    passwdCheck: '',
                     age: ''
                 },
                 ruleCustom: {
                     account: [
                         { validator:validateName , trigger: 'blur' }
                     ],
-                    passwdCheck: [
+                    password: [
                         { validator: validatePass, trigger: 'blur' }
                     ],
                     age: [
@@ -139,19 +138,46 @@
         methods: {
 			// 登录
             handleSubmit (name) {
+				var that = this;
                 this.$refs[name].validate((valid) => {
                     if (valid) {
-                        this.$Message.success('Success!');
-						this.$router.push({
-							name:'/Overview',
-							params:{
-								
+						console.log(this.formCustom)
+						let params = this.formCustom;
+						this.$Message.success('Success!');
+						this.$fetch('login',{
+							phoneNum:params.account,
+							password:params.password
+						}).then((data)=>{
+							// console.log(data)
+							if(data.code == 1){
+								localStorage.setItem('temobj',JSON.stringify({
+									type:data.data.type,
+									card:data.data.id,
+									user_name:data.data.user_name,
+									logo:data.data.logo,
+									token:data.data.token,
+									serial:data.data.serial
+								}))
+								// vuex设置用户信息
+								this.$store.commit('setuserinfo',{
+									type:data.data.type,
+									card:data.data.id,
+									user_name:data.data.user_name,
+									logo:data.data.logo,
+									token:data.data.token,
+									serial:data.data.serial
+								})
+								if(data.data.type == 2){
+									this.$router.push({
+										path:'/Overview'
+									})
+								}
 							}
-						})
-                    } else {
-                        this.$Message.error('Fail!');
-                    }
-                })
+						});
+					} else {
+						this.$Message.error('Fail!');
+					}
+				})
             },
 			// 重置
             handleReset (name) {

@@ -4,7 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import iView from 'iview';
-import {post} from './assets/js/httpRequestUtil.js'
+import {post,fetch} from './assets/js/httpRequestUtil.js'
 import {comFilters} from './assets/js/common.js'
 import moment from 'moment/moment'
 import './assets/font/iconfont.css'
@@ -14,8 +14,31 @@ import Vuex from 'vuex'
 import store from './store'
 import ECharts from 'vue-echarts/components/ECharts'
 import 'echarts/lib/chart/pie'
+Vue.prototype.$post = post;
+Vue.prototype.$fetch = fetch;
 
+// 日期过滤器
+Vue.filter('moment', function(value, formatString) {
+	formatString = formatString || 'YYYY-MM-DD HH:mm:ss';
+	// return moment(value).format(formatString); // value可以是普通日期 20170723
+	return moment.unix(value).format(formatString); // 这是时间戳转时间
+});
 
+for (let key in comFilters){ 
+	Vue.filter(key,comFilters[key]) 
+}
+// import '../mytheme/index.less';
+let temobjs = JSON.parse(localStorage.getItem('temobj'))
+if(temobjs){
+	store.commit('setuserinfo',{
+		type:temobjs.type,
+		card:temobjs.id,
+		user_name:temobjs.user_name,
+		token:temobjs.token,
+		logo:temobjs.logo,
+		serial:temobjs.serial
+	})
+}
 
 Vue.config.productionTip = false
 Vue.use(iView)

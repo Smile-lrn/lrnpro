@@ -4,7 +4,7 @@ import router from '../../router'
 
 axios.defaults.timeout = 15000;
 // axios.defaults.baseURL = 'http://192.168.30.147';
-axios.defaults.baseURL = 'http://xjyc.mumarenkj.com/';
+axios.defaults.baseURL = 'http://114.67.95.11:8011/';
 
 // axios.defaults.baseURL = 'http://liqi.sharexwd.top/';
 // import state from '../../store/state';

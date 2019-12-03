@@ -180,7 +180,7 @@
 						<Icon @click.native="collapsedSider" :style="{ margin: '0 20px' }" type="md-menu" size="24"></Icon>
 					</div>
 					<div class="layout-nav" @click="opentabboxs" style="color: #fff;">
-						<span>欢迎你，123。当前余额：0.00</span>
+						<span>欢迎你，{{this.$store.state.userName}} ❤。 当前余额：{{this.$store.state.accountBalance}}</span>
 					</div>
 				</Menu>
 			</Header>
@@ -286,7 +286,8 @@ export default {
 			accordion: true, //开启手风琴效果,
 			paramname: '', //内部跳转
 			modal10: false,
-			tabboxs:false
+			tabboxs:false,
+			userinfo:{},
 		};
 	},
 	computed: {
@@ -371,7 +372,9 @@ export default {
 	},
 	
 	created(){
-		this.setopenfun()
+		this.setopenfun();
+		
+
 	}
 };
 </script>

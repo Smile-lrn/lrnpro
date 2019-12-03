@@ -16,7 +16,7 @@
 		min-height: 100%; 
 		height: auto;  
 		width: 100%;  
-		background: url(../../static/0.jpg) no-repeat;
+		background: url(../../static/0.png) no-repeat;
 		background-size: cover;
 		/* 加滤镜 */
 		/* //背景模糊设置 */
@@ -76,13 +76,13 @@
 			    <FormItem label="密 码" prop="password">
 			        <Input type="password" v-model="formCustom.password" />
 			    </FormItem>
-			    <FormItem label="验证码" prop="age">
+			    <!-- <FormItem label="验证码" prop="age">
 			        <Input type="text" v-model="formCustom.age" number>
 						 <div slot="append" class="appendimgbox">
-							 <img src="http://dl.lym2m.cn/public/verify?0.9916101715339238&random=0.9526005221504152&random=0.9619436271886317&random=0.17946752344834715&random=0.045428342459822524&random=0.2555581791130701&random=0.35478816814937186&random=0.49538068745397945&random=0.7811739884869227" alt="">
+							 <img src="https://dl.lym2m.cn/public/verify?0.9916101715339238&random=0.9526005221504152&random=0.9619436271886317&random=0.17946752344834715&random=0.045428342459822524&random=0.2555581791130701&random=0.35478816814937186&random=0.49538068745397945&random=0.7811739884869227" alt="">
 						 </div>
 					 </Input>
-			    </FormItem>
+			    </FormItem> -->
 			    <FormItem>
 			        <Button type="primary" @click="handleSubmit('formCustom')">登录</Button>
 			        <Button @click="handleReset('formCustom')" style="margin-left: 8px">重置</Button>
@@ -108,13 +108,13 @@
                     callback();
                 }
             };
-            const validateAge = (rule, value, callback) => {
-                if (!value) {
-                    return callback(new Error('请填写正确的验证码'));
-                }else{
-					callback()
-				}
-            };
+            // const validateAge = (rule, value, callback) => {
+            //     if (!value) {
+            //         return callback(new Error('请填写正确的验证码'));
+            //     }else{
+			// 		callback()
+			// 	}
+            // };
             
             return {
                 formCustom: {
@@ -128,9 +128,6 @@
                     ],
                     password: [
                         { validator: validatePass, trigger: 'blur' }
-                    ],
-                    age: [
-                        { validator: validateAge, trigger: 'blur' }
                     ]
                 }
             }
@@ -143,39 +140,28 @@
                     if (valid) {
 						console.log(this.formCustom)
 						let params = this.formCustom;
-						this.$Message.success('Success!');
 						this.$fetch('login',{
 							phoneNum:params.account,
 							password:params.password
-						}).then((data)=>{
+						},true).then((data)=>{
 							// console.log(data)
-							if(data.code == 1){
-								localStorage.setItem('temobj',JSON.stringify({
-									type:data.data.type,
-									card:data.data.id,
-									user_name:data.data.user_name,
-									logo:data.data.logo,
-									token:data.data.token,
-									serial:data.data.serial
-								}))
+							if(data.status === 0){
+								that.$Message.success('登陆成功！');
+								sessionStorage.setItem('temobj',JSON.stringify(data.userInfo));
+								sessionStorage.setItem('token',data.token);
 								// vuex设置用户信息
-								this.$store.commit('setuserinfo',{
-									type:data.data.type,
-									card:data.data.id,
-									user_name:data.data.user_name,
-									logo:data.data.logo,
-									token:data.data.token,
-									serial:data.data.serial
+								that.$store.commit('setuserinfo',data.userInfo);
+								that.$store.commit('setToken',data.token);
+								that.$router.push({
+									path:'/Overview'
 								})
-								if(data.data.type == 2){
-									this.$router.push({
-										path:'/Overview'
-									})
-								}
+							}else{
+								// 0.请求成功 1.账号不存在 2.密码错误 3.验证码错误 4.系统出错
+								that.$Message.error(data.message);
 							}
 						});
 					} else {
-						this.$Message.error('Fail!');
+						that.$Message.error('请填写正确的登陆信息！');
 					}
 				})
             },

@@ -1,13 +1,13 @@
 import axios from 'axios';
 import store from '../../store'
 import router from '../../router'
+import { Message } from 'iview'
 
 axios.defaults.timeout = 15000;
 // axios.defaults.baseURL = 'http://192.168.30.147';
 axios.defaults.baseURL = 'http://114.67.95.11:8011/';
-
 // axios.defaults.baseURL = 'http://liqi.sharexwd.top/';
-// import state from '../../store/state';
+import state from '../../store/state';
 // import {Message} from 'iview';
 //http request 拦截器
 // axios.interceptors.request.use(
@@ -25,15 +25,15 @@ axios.defaults.baseURL = 'http://114.67.95.11:8011/';
 // );
 //http response 拦截器
 axios.interceptors.response.use(
+    config => {
+      config.headers = {
+        'Content-Type': 'application/json',
+        'token': store.state.token
+      };
+      return config;
+    },
   response => {
 		// console.log(response)
-    if(response.data.status ==-1 && response.data.msg.indexOf('令牌') !=-1){
-      router.push({
-				path:'/login'
-			})
-    }else{
-			return response;
-    }
   },
   error => {
     // console.log(error);
@@ -51,18 +51,54 @@ axios.interceptors.response.use(
  * @returns {Promise}
  */
 
-export function fetch(url, params = {}) {
-  return new Promise((resolve, reject) => {
-    axios.get(url, {
-      params: params
+export function fetch(url, params = {},login) {
+  // axios.defaults.headers['Content-Type'] = 'application/json; charset=utf-8';
+  axios.defaults.headers['Content-Type'] = 'application/json, text/plain, */*'; 
+  if(login){
+    return new Promise((resolve, reject) => {
+        axios.get(url, {
+          params: params
+        })
+        .then(response => {
+          console.log(response)
+          if(response && response.data){
+            if(response.data.status==0){
+              resolve(response.data);
+            }else{
+              Message.error('服务器错误：500，请稍后重试！');
+            }
+          }else{
+            Message.error('服务器错误：500，请稍后重试！');
+          }
+        })
+        .catch(err => {
+          reject(err)
+        })
     })
-      .then(response => {
-        resolve(response);
-      })
-      .catch(err => {
-        reject(err)
-      })
-  })
+  }else{
+    axios.defaults.headers['Authorization'] = sessionStorage.getItem('token');
+    return new Promise((resolve, reject) => {
+        axios.get(url, {
+          params: params
+        })
+        .then(response => {
+          console.log(response)
+          if(response && response.data){
+            if(response.data.code=='200'){
+              resolve(response.data.data);
+            }else{
+              Message.error('服务器错误：500，请稍后重试！');
+            }
+          }else{
+            Message.error('服务器错误：500，请稍后重试！');
+          }
+        })
+        .catch(err => {
+          reject(err)
+        })
+    })
+  }
+
 }
 
 
@@ -74,14 +110,19 @@ export function fetch(url, params = {}) {
  */
 
 export function post(url, data = {}) {
-	if(store.state.token){
-		axios.defaults.headers['token'] =store.state.token
-	}
-	axios.defaults.headers['Content-Type'] = 'application/json; charset=utf-8';
+	axios.defaults.headers['Content-Type'] = 'application/json, text/plain, */*'; 
   return new Promise((resolve, reject) => {
     axios.post(url, data)
       .then(response => {
-        resolve(response.data);
+        if(response && response.data){
+          if(response.data.code=='200'){
+            resolve(response.data.data);
+          }else{
+            Message.error('服务器错误：500，请稍后重试！');
+          }
+        }else{
+          Message.error('服务器错误：500，请稍后重试！');
+        }
       }, err => {
         reject(err)
       })

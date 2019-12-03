@@ -8,13 +8,16 @@ const mutations = {
 	},
 	// 设置用户登陆信息
 	setuserinfo: (state,val) => {
-	  state.card=val.card
-		state.type=val.type
-		state.user_name=val.user_name
-		state.logo = val.logo
-		state.token = val.token
-		state.serial = val.serial
+	  	state.loginAccount=val.loginAccount;
+		state.userName=val.userName;
+		state.phoneNum=val.phoneNum;
+		state.mailAddress = val.mailAddress;
+		state.accountBalance = val.accountBalance;
 	},
+	// 设置token
+	setToken:(state,val) => {
+		state.token = val.token;
+	}
 }
 // 导出state
 export default mutations

@@ -88,11 +88,11 @@
 				<div class="grouplist">
 					<div class="groupbox">
 						<span>例如：1000000001-1000000002 如需充值一张，开始iccid和结束iccd一样 </span>
-						<input type="text" placeholder="请输入开始ICCID">
+						<input type="text" placeholder="请输入开始ICCID" v-model="beginIccid">
 					</div>
 					<div class="groupbox">
 						<span>例如：1000000001 </span>
-						<input type="text" placeholder="请输入结束ICCID">
+						<input type="text" placeholder="请输入结束ICCID" v-model="endIccid">
 					</div>
 				</div>
 			</div>
@@ -129,6 +129,8 @@
 	export default {
 		data() {
 			return {
+				beginIccid:'',
+				endIccid:'',
 				current:0,
 				tem_params:"",
 				formLeft: {
@@ -180,6 +182,7 @@
 			};
 		},
 		methods: {
+			// 获取参数
 			prefun(){
 				if (this.current <=0) {
 					this.current =0;
@@ -188,6 +191,15 @@
 				}
 			},
 			next() {
+				// 判断是否输入绑定号
+				if(!this.beginIccid){
+					this.$Message.error('请填写正确的开始值!');
+					return;
+				}
+				if(!this.endIccid){
+					this.$Message.error('请填写正确的结束值!');
+					return;
+				}
 				if (this.current >= 1) {
 					this.current = 0;
 				} else {

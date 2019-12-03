@@ -155,18 +155,21 @@
 				<input type="text" v-model="iccid" placeholder="请输入iccid">
 				<input type="text" v-model="starticcid" placeholder="请输入开始iccid">
 				<input type="text" v-model="endiccid" placeholder="请输入结束iccid">
-				<input type="text" v-model="endiccid" placeholder="请输入当前套餐已使用(MB)">
-				<input type="text" v-model="endiccid" placeholder="请输入<当前套餐已使用(MB)">
-				<Select v-model="model1" :label-in-value="labelinvalue" style="width:200px" @on-change="choosecategory">
+				<input type="text" v-model="allowance" placeholder="请输入当前套餐已使用(MB)">
+				<input type="text" v-model="lessAllowance" placeholder="请输入<当前套餐已使用(MB)">
+				<Select v-model="model1" placeholder="请选择状态" :label-in-value="labelinvalue" style="width:200px" @on-change="choosecategory">
 					<Option style="text-align: left;" v-for="item in typelist1" :value="item.id" :key="item.user_name">{{ item.user_name }}</Option>
 				</Select>
-				<Select v-model="model2" @on-change="onChagefun"  style="width:200px">
-					<Option v-for="item in yidongpickers" :value="item.value" :key="item.value">{{ item.label }}</Option>
+				<Select v-model="model2" placeholder="请选择apiName" @on-change="onChagefun"  style="width:200px">
+					<Option v-for="item in yidongpickers" :value="item.id" :key="item.id">{{ item.apiName }}</Option>
 				</Select>
-				<Select v-model="model3" @on-change="onChagefun"  style="width:200px">
+				<!-- <Select v-model="model3" @on-change="onChagefun"  style="width:200px">
 					<Option v-for="item in telecompickers" :value="item.value" :key="item.value">{{ item.label }}</Option>
+				</Select> -->
+				<Select v-model="province" placeholder="请选择省份" @on-change="selectProvince" style="width:150px;">
+					<Option v-for="item in provinceArr" :key="item.label" :value="item.label" >{{ item.label}}</Option>
 				</Select>
-				<Button type="primary" style="margin-right: 20px;" size="large" @click="exportData(1)">搜索</Button>
+				<Button type="primary" style="margin-right: 20px;" size="large" @click="searchFun">搜索</Button>
 				<Button type="primary" size="large" @click="exportData(1)"><Icon type="ios-download-outline"></Icon>导出数据</Button>
 			</div>
 		</div>
@@ -176,7 +179,7 @@
 				<span style="padding:5px 3px;background-color: #f4b162;color:#fff;border-radius:4px;cursor:pointer;" @click="getDetail(row,index)">套餐明细</span>
 			</template>
 		</Table>
-		<Page :total="100" show-elevator />
+		<Page :total="totalNum" :page-size="size" show-elevator @on-change="setPage"/>
 		<div class="detailBox" v-if="detailFlag">
 			<div class="detailItem">
 				<p class="detailtile">
@@ -209,42 +212,43 @@
     </div>
 </template>
 <script>
+	import provinceArr from '../../assets/js/province';
     export default {
         data () {
             return {
+				pageSizeOpts:[1,10,20,50,100],
+				province:'',
+				provinceArr:[],
 				labelinvalue:true,
 				money:'',
-				model1:'请选择状态',
+				model1:'',
 				iccid:'',
 				starticcid:'',
 				endiccid:'',
 				detailFlag:false,
+				lessAllowance:'',
+				allowance:'',
+				totalNum:0,
+				page:1,
+				size:this.$store.state.pageSize,
 				typelist1:[
 					{
 					"id":'请选择状态', 
 					"user_name": "请选择状态" 
 					},{
 						"id":'1', 
-						"user_name": "正常" 
-					},{
-						"id":'2', 
-						"user_name": "停机" 
+						"user_name": "正常使用" 
 					},{
 						"id":'3', 
+						"user_name": "停用" 
+					},{
+						"id":'2', 
 						"user_name": "库存" 
 					}
 				] ,
-                model2:'0',
+                model2:'',
                 model3:'10',
 				yidongpickers: [
-                	{
-                		value: '0',
-                		label: 'api'
-                	},
-                	{
-                		value: '38',
-                		label: '移动02'
-                	},
                 ],
                 telecompickers: [
                 	{
@@ -280,25 +284,23 @@
 					
 					{
 					    title: '所属代理',
-					    key: 'changedmoney'
+					    key: 'belongUser'
 					},
-                    {
-                        title: '当前套餐已使用(MB)',
-                        key: 'datetime'
+                    // {
+                    //     title: '当前套餐已使用(MB)',
+                    //     key: 'allowance'
+					// },
+					{
+                        title: '套餐余量(MB)',
+                        key: 'allowance'
                     },
                     {
                         title: '状态',
-                        key: 'types'
+                        key: 'status'
                     },
-					
 					{
-					    title: '备注',
-					    key: 'remark',
-						tooltip:true
-					},
-					{
-					    title: 'api',
-					    key: 'api'
+					    title: 'api名称',
+					    key: 'apiName'
 					},
 					
 					{
@@ -307,31 +309,71 @@
 					}
                 ],
                 data1: [
-                    {
-                        money: '50.00',
-                        remark: '充值话费50元，优惠2元充值话费50元，优惠2元充值话费50元，优惠2元',
-                        changedmoney: '小伟',
-						datetime:'0',
-						types:'03联通B',
-						iccid:'8986061911001512717',
-						id:1,
-                    },
-                    {
-                        money: '10.00',
-                        remark: '04联通',
-                        changedmoney: '贺阳',
-                    	datetime:'1',
-                    	types:'微信',
-						id:2,
-						iccid:'8986061911001512715',
-                    }
                 ]
             }
         },
         methods: {
+			// 设置页码
+			setPage(page){
+				console.log(page)
+				this.page = page;
+				this.getList(this.getParams());
+			},
+			// 获取api列表
+			getapiList(){
+				var that = this;
+				var params = {
+					type:1,
+				}
+				this.$fetch('/api/queryByType',params)
+				.then(function(data){
+					that.yidongpickers = data;
+				})
+			},
+			// 获取查询参数
+			getParams(){
+				var params = {};
+				params = {
+					type:1,	//是	int	1联通卡 2移动卡 3 电信卡
+					page:this.page,	//否	int	当前页码 不写默认为0
+					size:this.size,	//否	int	每页数量 不写默认为10
+					iccid:this.iccid,	//否	string	iccid
+					beginIccid:this.starticcid,	//否	string	开始iccid
+					endIccid:this.endiccid,	//否	string	结束iccid
+					allowance:this.allowance,	//否	long	套餐余量，查询是需要乘100
+					lessAllowance:this.lessAllowance,	//否	long	小于套餐余量，查询是需要乘100
+					apiId:this.model2,	//否	int	Api的对应id
+					status:this.model1,
+					area:this.province=='全国'?'':this.province,
+				}
+				return params;
+			},
+			// 获取列表
+			getList(params){
+				var that = this;
+				this.$fetch('/cardManage/queryByPage',params)
+				.then(function(data){
+					data.list.forEach(function(element,index){
+					element.createTime = that.filterDate(element.createTime)
+					element.type = that.filterType(element.type)
+					})
+					that.totalNum = data.total;
+					console.log(that.totalNum)
+					// 对金额做处理
+					// data.list
+					that.data1 = data.list;
+				})
+			},
+			// 查询
+			searchFun(){
+				this.getList(this.getParams())
+			},
 			onChagefun(){},
 			// 选择类型
 			choosecategory(val){
+				console.log(val)
+			},
+			selectProvince(val){
 				console.log(val)
 			},
 			// 选择日期
@@ -379,6 +421,10 @@
 				this.detailFlag = false;
 			},
 		},
-		
+		created(){
+			this.provinceArr = provinceArr;
+			this.getapiList();
+			this.getList(this.getParams())
+		}
     }
 </script>

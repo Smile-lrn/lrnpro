@@ -229,7 +229,7 @@ export default {
         type:this.type=='请选择类型'?'':this.type,
         createStartTime:this.startTime,
         creteEndTime:this.endTime,
-        amount:(this.money!==0&&!this.money)?'':Number(this.money)*100,
+        amount:(this.money!==0&&!this.money)?'':Number(this.money),
         page:this.page,
         size:this.size,
       }

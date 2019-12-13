@@ -302,7 +302,10 @@
 					    title: 'api名称',
 					    key: 'apiName'
 					},
-					
+					{
+					    title: '地区',
+					    key: 'area'
+					},
 					{
 					    title: '操作',
 					    slot: 'operation'

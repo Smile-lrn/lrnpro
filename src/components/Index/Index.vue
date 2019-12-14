@@ -235,6 +235,13 @@
 							</template>
 							<MenuItem name="/Operatingadiary" @click.native="onSelected('/Operatingadiary', '操作日记')">操作日记</MenuItem>
 						</Submenu>
+						<Submenu name="6">
+							<template slot="title">
+								<Icon class="l_iconfont l_iconicon_caigouguanli8"></Icon>
+								<span>佣金管理</span>
+							</template>
+							<MenuItem name="/Echartspage" @click.native="onSelected('/Echartspage', '我的佣金')">我的佣金</MenuItem>
+						</Submenu>
 						<!-- <Submenu name="6">
 							<template slot="title">
 								<Icon class="l_iconfont l_iconicon_caigouguanli8"></Icon>

@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '@/components/Login'
+import UpdatePwd from '@/components/updatePwd'// 修改密码
+import SmsProp from '@/components/SmsProp'// 短信提醒
+
 import Index from '@/components/Index/Index'
 import Overview from '@/components/overview/Overview' //平台首页
 import Balancerecord from '@/components/Balancerecord/Balancerecord' //余额记录
@@ -63,7 +66,7 @@ export default new Router({
 				component: Telecommunicationcard,
 			},
 			{
-				path: '/Detail/:type',
+				path: '/Detail/:type/',
 				name: '/Detail',
 				component: Detail,
 			},
@@ -112,7 +115,18 @@ export default new Router({
 				name: '/Agenttopup',
 				component: Agenttopup,
 			},
-			
+			{
+				
+				path: '/updatePwd',
+				name: 'UpdatePwd',
+				component: UpdatePwd
+			},
+			{
+				
+				path: '/smsProp',
+				name: 'SmsProp',
+				component: SmsProp
+			},
 			
 		]
 	},

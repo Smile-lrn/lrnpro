@@ -235,13 +235,13 @@
 							</template>
 							<MenuItem name="/Operatingadiary" @click.native="onSelected('/Operatingadiary', '操作日记')">操作日记</MenuItem>
 						</Submenu>
-						<Submenu name="6">
+						<!-- <Submenu name="6">
 							<template slot="title">
 								<Icon class="l_iconfont l_iconicon_caigouguanli8"></Icon>
 								<span>数据可视化</span>
 							</template>
 							<MenuItem name="/Echartspage" @click.native="onSelected('/Echartspage', '数据可视化展示')">数据可视化展示</MenuItem>
-						</Submenu>
+						</Submenu> -->
 					</Menu>
 					<div slot="trigger"></div>
 				</Sider>
@@ -259,9 +259,9 @@
 		</Layout>
 		<!-- 设置区 -->
 		<div :class="tabboxs?'tabboxs active':'tabboxs'">
-			<span>修改登录密码</span>
-			<span>修改登二级密码</span>
-			<span>修改短信密码</span>
+			<span @click="goUpadatePwd">修改登录密码</span>
+			<!-- <span>修改登二级密码</span> -->
+			<span @click="smsPropfun">短信提醒</span>
 			<span @click="logoutfun">退出</span>
 		</div>
 		<!-- 退出登录模态框 -->
@@ -356,6 +356,7 @@ export default {
 			localStorage.clear();
 			localStorage.setItem('Submenuname', 0);
 			localStorage.setItem('breadcrumbItems', '平台首页');
+			sessionStorage.clear();
 			this.$router.push({
 				path: '/login'
 			});
@@ -369,6 +370,17 @@ export default {
 			// 激活二级菜单
 			this.activeName = this.$route.name
 		},
+		// 修改密码跳转
+		goUpadatePwd(){
+			this.$router.push({
+				path:'/updatePwd'
+			})
+		},
+		smsPropfun(){
+			this.$router.push({
+				path:'/smsProp'
+			})
+		}
 	},
 	
 	created(){

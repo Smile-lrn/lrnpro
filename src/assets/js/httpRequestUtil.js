@@ -65,7 +65,7 @@ export function fetch(url, params = {},login) {
             if(response.data.status==0){
               resolve(response.data);
             }else{
-              Message.error('服务器错误：500，请稍后重试！');
+              Message.error(response.data.message);
             }
           }else{
             Message.error('服务器错误：500，请稍后重试！');
@@ -110,16 +110,14 @@ export function fetch(url, params = {},login) {
  */
 
 export function post(url, data = {}) {
-	axios.defaults.headers['Content-Type'] = 'application/json, text/plain, */*'; 
+  axios.defaults.headers['Content-Type'] = 'application/json, text/plain, */*'; 
+  axios.defaults.headers['Authorization'] = sessionStorage.getItem('token');
   return new Promise((resolve, reject) => {
     axios.post(url, data)
       .then(response => {
-        if(response && response.data){
-          if(response.data.code=='200'){
-            resolve(response.data.data);
-          }else{
-            Message.error('服务器错误：500，请稍后重试！');
-          }
+        console.log(response)
+        if(response && response.status == '200'){
+          resolve(response.data);
         }else{
           Message.error('服务器错误：500，请稍后重试！');
         }

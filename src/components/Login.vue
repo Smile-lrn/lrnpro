@@ -149,9 +149,11 @@
 								that.$Message.success('登陆成功！');
 								sessionStorage.setItem('temobj',JSON.stringify(data.userInfo));
 								sessionStorage.setItem('token',data.token);
+								sessionStorage.setItem('cashOutPwd',params.password);
 								// vuex设置用户信息
 								that.$store.commit('setuserinfo',data.userInfo);
 								that.$store.commit('setToken',data.token);
+								that.$store.commit('setcashOutPwd',params.password);
 								that.$router.push({
 									path:'/Overview'
 								})

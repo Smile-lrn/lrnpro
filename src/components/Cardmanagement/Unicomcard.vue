@@ -186,7 +186,7 @@
 					<span>套餐列表</span>
 					<span class="right" @click="closeDetail">X</span>
 				</p>
-				<hr>
+				<hr>baidu
 				<div>
 					<table>
 						<thead>
@@ -198,7 +198,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr v-for="(item,index) in 10" :key="index">
+							<tr v-for="(item,index) in detailList" :key="index">
 								<td>2019-10-01</td>
 								<td>1GB</td>
 								<td>100MB</td>
@@ -296,7 +296,7 @@
                     },
                     {
                         title: '状态',
-                        key: 'status'
+                        key: 'statustxt'
                     },
 					{
 					    title: 'api名称',
@@ -312,7 +312,8 @@
 					}
                 ],
                 data1: [
-                ]
+				],
+				detailList:[],
             }
         },
         methods: {
@@ -333,6 +334,15 @@
 					that.yidongpickers = data;
 				})
 			},
+			//  套餐明细
+            queryByList:(params)=>{
+                this.$fetch('/api/queryByType',params)
+				.then((data)=>{
+					this.detailList = data;
+					this.detailFlag = true;
+					
+                })
+            },
 			// 获取查询参数
 			getParams(){
 				var params = {};
@@ -357,8 +367,17 @@
 				this.$fetch('/cardManage/queryByPage',params)
 				.then(function(data){
 					data.list.forEach(function(element,index){
-					element.createTime = that.filterDate(element.createTime)
-					element.type = that.filterType(element.type)
+						element.createTime = that.filterDate(element.createTime)
+						element.type = that.filterType(element.type)
+						element.allowance = element.allowance/100;
+						element.allowanceDecimal = element.allowanceDecimal/100;
+						if(element.status==1){
+							element.statustxt = '正常使用'
+						}else if(element.status==2){
+							element.statustxt = '库存'
+						}else if(element.status==3){
+							element.statustxt = '停用'
+						}
 					})
 					that.totalNum = data.total;
 					console.log(that.totalNum)
@@ -411,13 +430,17 @@
 				this.$router.push({
 					name: '/Detail',
 					params:{
-						type:'cz'
+						type:'cz',
+						// defaultData:JSON.stringify(row),
 					}
 				});
+				sessionStorage.setItem('defaultData',JSON.stringify(row));
 			},
 			// 套餐明细
 			getDetail:function(row,index){
-				this.detailFlag = true;
+				this.queryByList({
+					apiId:row.apiId
+				});
 			},
 			// 关闭弹窗
 			closeDetail:function(row,index){

@@ -139,14 +139,14 @@
     <div class="balancebox">
 		<div class="searchbox">
 			<div class="lmbxo">
-				<input type="text" v-model="money" placeholder="请输入登录账号">
-				<input type="text" v-model="money" placeholder="请输入姓名">
-				<input type="phone" v-model="money" placeholder="手机号">
-				<input type="email" v-model="money" placeholder="邮箱">
+				<input type="text" v-model="loginAccount" placeholder="请输入登录账号">
+				<input type="text" v-model="userName" placeholder="请输入姓名">
+				<input type="phone" v-model="phoneNum" placeholder="手机号">
+				<input type="email" v-model="mailAddress" placeholder="邮箱">
 				<Select v-model="model_show" style="width:200px">
 					<Option v-for="item in isShowarr" :value="item.value" :key="item.value">{{ item.label }}</Option>
 				</Select>
-				<Button type="primary" style="margin-right: 20px;" size="large" @click="exportData(1)">搜索</Button>
+				<Button type="primary" style="margin-right: 20px;" size="large" @click="searchFun">搜索</Button>
 			</div>
 		</div>
         <Table border ref="selection" :columns="columns4" :data="data1" >
@@ -159,7 +159,7 @@
 				</div>
 			</template>
 		</Table>
-		<Page :total="100" show-elevator />
+		<Page :total="totalNum" :page-size="size" show-elevator @on-change="setPage"/>
 		<div class="editbox" v-if="editboxFlag">
 			<Col class="formbox"  >
 				<Form ref="formCustom" :model="formCustom" :rules="ruleCustom" :label-width="80">
@@ -179,15 +179,15 @@
 						<Input type="email" v-model="formCustom.emails" ></Input>
 					</FormItem>
 					<FormItem label="显示佣金">
-						<Select v-model="model2" @on-change="onChagefun"  style="width:200px">
-                        	<Option v-for="item in showarr" :value="item.value" :key="item.value">{{ item.label }}</Option>
+						<Select v-model="model3" @on-change="onChagefun"  style="width:200px">
+                        	<Option v-for="item in showarr_1" :value="item.value" :key="item.value">{{ item.label }}</Option>
 						</Select>
 					</FormItem>
-					<FormItem label="状态">
+					<!-- <FormItem label="状态">
 						<Select v-model="model3" @on-change="onChagefun"  style="width:200px">
 							<Option v-for="item in showarr_1" :value="item.value" :key="item.value">{{ item.label }}</Option>
 						</Select>
-					</FormItem>
+					</FormItem> -->
 					<FormItem>
 						<Button type="primary" @click="handleSubmit('formCustom')">确定</Button>
 						<Button @click="handleReset('formCustom')" style="margin-left: 8px">取消</Button>
@@ -201,11 +201,7 @@
     export default {
         data () {
  			const validatePass = (rule, value, callback) => {
-                if (value === '') {
-                    callback(new Error('请输入密码'));
-                } else {
                     callback();
-                }
             };
             const validatename = (rule, value, callback) => {
                 if (value === '') {
@@ -216,7 +212,8 @@
             };
             const validateAge = (rule, value, callback) => {
                 if (!value) {
-                    return callback(new Error('登录账号不可以为空哟~'));
+					// return callback(new Error('登录账号不可以为空哟~'));
+					callback();
                 }else {
                     callback();
                 }
@@ -262,42 +259,35 @@
                     },
                     {
                         title: '登录账号',
-                        key: 'money'
+                        key: 'loginAccount'
                     },
                     {
                         title: '姓名',
-                        key: 'remark',
+                        key: 'userName',
 						tooltip:true
                     },
                     {
                         title: '余额',
-                        key: 'changedmoney'
+                        key: 'accountBalanceDecimal'
                     },
                     {
                         title: '手机号',
-                        key: 'datetime'
+                        key: 'phoneNum'
                     },
                     {
                         title: '邮箱',
-                        key: 'types'
+                        key: 'mailAddress'
 					},
                     {
                         title: '显示佣金',
-                        key: 'xsyj'
+                        key: 'statustxt'
                     },
 					{
 					    title: '操作',
 					    slot: 'operation'
 					}
                 ],
-                data1: [{
-					money:'heyang',
-					remark:'贺阳',
-					changedmoney:'0.00',
-					datetime:'13203715363',
-					xsyj:'显示',
-					types:"13203715363@163.com"
-				}],
+                data1: [],
 				formCustom: {
                     passwd: '',
                     name: '',
@@ -321,7 +311,11 @@
 					emails: [
                         { validator: validateemail, trigger: 'blur' }
                     ],
-                },
+				},
+				loginAccount:'',
+				userName:'',
+				phoneNum:"",
+				mailAddress:'',
                 model2:'1',
                 showarr:[{
                     value:'1',
@@ -329,18 +323,81 @@
                 },{
                     value:'0',
                     label:"不显示"
-                }],
-                model3:'1',
+				}],
+				model3:1,
                 showarr_1:[{
-                    value:'1',
-                    label:"正常"
+                    value:1,
+                    label:"显示"
                 },{
-                    value:'0',
-                    label:"禁用"
-                }]
+                    value:0,
+                    label:"不显示"
+                }],
+				totalNum:0,
+				page:1,
+				size:this.$store.state.pageSize,
             }
         },
         methods: {
+			// 设置页码
+			setPage(page){
+				console.log(page)
+				this.page = page;
+				this.getList(this.getParams());
+			},
+			// 获取api列表
+			getapiList(){
+				var that = this;
+				var params = {
+					type:1,
+				}
+				this.$fetch('/api/queryByType',params)
+				.then(function(data){
+					that.yidongpickers = data;
+				})
+			},
+			//  套餐明细
+            queryByList:(params)=>{
+                this.$fetch('/api/queryByType',params)
+				.then((data)=>{
+					this.detailList = data;
+					this.detailFlag = true;
+					
+                })
+            },
+			// 获取查询参数
+			getParams(){
+				var params = {};
+				params = {
+					loginAccount:this.loginAccount||'',
+					userName:this.userName||'',
+					phoneNum:this.phoneNum||"",
+					mailAddress:this.mailAddress||'',
+					show:this.model_show||'',
+					page:this.page,	//否	int	当前页码 不写默认为0
+					size:this.size,	//否	int	每页数量 不写默认为10
+				}
+				return params;
+			},
+			// 获取列表
+			getList(params){
+				var that = this;
+				this.$fetch('/user/queryByPage',params)
+				.then(function(data){
+					data.list.forEach(function(element,index){
+						if(element.show===1){
+							element.statustxt = '显示'
+						}else if(element.show===0){
+							element.statustxt = '不显示'
+						}
+					})
+					that.totalNum = data.total;
+					that.data1 = data.list;
+				})
+			},
+			// 查询
+			searchFun(){
+				this.getList(this.getParams())
+			},
 			onChagefun(){},
 			// 选择类型
 			choosecategory(val){
@@ -375,7 +432,21 @@
 			},
 			// 修改
 			updateAgent:function(row,index){
-				this.editboxFlag = true
+				console.log(row)
+				this.formCustom={
+					id:row.id,
+					accountnumber:row.loginAccount,
+                    passwd: '',
+                    name:row.userName,
+					phonenumber:row.phoneNum,
+					emails:row.mailAddress,
+					show:row.show,
+					parentId:row.parentId,
+					accountBalance:row.accountBalance
+				},
+				this.model3 = row.show;
+				this.editboxFlag = true;
+				
 			},
 			// 设置售价
 			setPricefun:function(row,index){
@@ -396,9 +467,18 @@
 				})
 			},
 			handleSubmit (name) {
+				var that = this;
                 this.$refs[name].validate((valid) => {
                     if (valid) {
-                        this.$Messaccountnumber.success('Success!');
+                        that.$post('/user/addOrUpdate',this.formCustom).then((data)=>{
+                            console.log(data)
+                            if(data.code == '500'){
+                                that.$Message.error('请求失败,请稍后重试!');
+                            }else if(data.code == '200'){
+                                that.$Message.success('添加或修改成功！');
+                                that.searchFun();
+                            }
+                        })
                     } else {
                         this.$Messaccountnumber.error('Fail!');
                     }
@@ -407,6 +487,9 @@
             handleReset (name) {
                 this.editboxFlag = false;
             }     
-        }
+		},
+		created(){
+			this.searchFun();
+		}
     }
 </script>

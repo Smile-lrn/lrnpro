@@ -17,7 +17,11 @@ const mutations = {
 	// 设置token
 	setToken:(state,val) => {
 		state.token = val.token;
-	}
+	},
+	// 设置密码
+	setcashOutPwd:(state,val)=>{
+		state.cashOutPwd = val;
+	},
 }
 // 导出state
 export default mutations

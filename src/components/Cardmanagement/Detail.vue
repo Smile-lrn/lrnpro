@@ -11,22 +11,22 @@
     <div class="singlebox" style="max-width:700px;margin:0 auto;">
         <Form :model="formLeft" label-position="left" :label-width="100">
             <FormItem label="绑定号">
-                <Input v-model="formLeft.input1" disabled="disabled"></Input>
+                <Input v-model="defaultData.iccid" disabled="disabled"></Input>
             </FormItem>
             <FormItem label="ICCID">
-                <Input v-model="formLeft.input2" disabled="disabled"></Input>
+                <Input v-model="defaultData.iccid" disabled="disabled"></Input>
             </FormItem>
             <FormItem label="当前状态">
-                <Input v-model="formLeft.input3" disabled="disabled"></Input>
+                <Input v-model="defaultData.statustxt" disabled="disabled"></Input>
             </FormItem>
             <FormItem label="已使用">
-                <Input v-model="formLeft.input4" disabled="disabled"></Input>
+                <Input v-model="defaultData.allowanceDecimal" disabled="disabled"></Input>
             </FormItem>
             <FormItem label="剩余流量">
-                <Input v-model="formLeft.input6" disabled="disabled"></Input>
+                <Input v-model="defaultData.allowance" disabled="disabled"></Input>
             </FormItem>
             <FormItem label="API">
-                <Input v-model="formLeft.input5" disabled="disabled"></Input>
+                <Input v-model="defaultData.apiName" disabled="disabled"></Input>
             </FormItem>
             <!-- 查询时无请选择套餐 -->
             <FormItem label="请选择套餐"  v-if="tem_params.type=='cz'">
@@ -81,12 +81,23 @@
                 ],
                 model6: '',
                 tem_params:'',
+                defaultData:{},
             }
+        },
+        methods:{
+            
         },
         created(){
             console.log(this.$route.params)
             var tem_params = this.$route.params;
+            if(tem_params.type == 'cz'){
+                this.defaultData = JSON.parse(sessionStorage.getItem('defaultData'));
+                
+            }
             this.tem_params = tem_params;
+        },
+        destroyed(){
+            sessionStorage.removeItem('defaultData');
         }
     }
 </script>

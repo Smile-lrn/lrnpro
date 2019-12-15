@@ -78,8 +78,8 @@
                             password:this.formCustom.cashOutPwd,//就密码
                             cashOutPwd:'',//二级密码
                             changePwd:this.formCustom.passwd,//新密码
-                        }
-                        that.$post('/user/changePwd',params).then((data)=>{
+                        };
+                        that.$fetch('/user/changePwd', params).then((data)=>{
                             console.log(data)
                             if(data.code == '500'){
                                 that.$Message.error('修改密码请求失败,请稍后重试!');

@@ -15,10 +15,10 @@
             <Input v-model="money"  disabled="disabled" />
         </FormItem>
         <FormItem label="提现金额¥ ">
-            <Input v-model="cashOutAmount" placeholder="请输入提现金额" />
+            <Input v-model="cashOutAmount" placeholder="请输入提现金额" @blur="moneyFun"/>
         </FormItem>
         <FormItem label="收款类型">
-            <Select v-model="formItem.select">
+            <Select v-model="alipayMethod">
                 <Option value="alipay">支付宝</Option>
             </Select>
         </FormItem>
@@ -40,7 +40,8 @@
     export default {
         data () {
             return {
-				money:'50.30',
+                money:'50.30',
+                alipayMethod:'alipay',
 				cashOutAmount:'',
 				alipayAccount:'',
 				alipayName:'',
@@ -58,6 +59,9 @@
             }
 		},
 		methods:{
+            moneyFun(){
+                /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/.test()
+            },
 			withDraw(){
 				var that = this;
 				var params ={};

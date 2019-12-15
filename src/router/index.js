@@ -19,7 +19,11 @@ import Addagent from '@/components/Agentmanagement/Addagent' //代理商列表
 import Sellingprice from '@/components/Agentmanagement/Sellingprice' //代理商售价设置
 import Agenttopup from '@/components/Agentmanagement/Agenttopup' //代理商充值
 import Operatingadiary from '@/components/Operatingadiary/Operatingadiary' //操作日记
-import Echartspage from '@/components/Echartspage/Echartspage' //操作日记
+import Echartspage from '@/components/Echartspage/Echartspage' //我的佣金
+import AutomaticPrice from '@/components/Echartspage/AutomaticPrice' //自动充值价格设置
+import CommissionRecord from '@/components/Echartspage/CommissionRecord' //佣金记录
+import WithdrawalRecord from '@/components/Echartspage/WithdrawalRecord' //提现记录
+
 
 Vue.use(Router)
 
@@ -104,6 +108,22 @@ export default new Router({
 				path: '/Echartspage',
 				name: '/Echartspage',
 				component: Echartspage,
+			},
+			{
+				path: '/CommissionRecord',
+				name: '/CommissionRecord',
+				component: CommissionRecord,
+			},
+			{
+				path: '/WithdrawalRecord',
+				name: '/WithdrawalRecord',
+				component: WithdrawalRecord,
+			},
+			
+			{
+				path: '/AutomaticPrice',
+				name: '/AutomaticPrice',
+				component: AutomaticPrice,
 			},
 			{
 				path: '/Sellingprice/:id',

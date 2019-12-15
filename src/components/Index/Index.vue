@@ -124,7 +124,7 @@
 	// <!-- 设置区 -->
 	.tabboxs.active{
 		transition: all .6s;
-		height: 150px;
+		height: 100px;
 		span{
 			color: #8b97a2;
 			transition: all 1s;
@@ -240,7 +240,10 @@
 								<Icon class="l_iconfont l_iconicon_caigouguanli8"></Icon>
 								<span>佣金管理</span>
 							</template>
+							<MenuItem name="/AutomaticPrice" @click.native="onSelected('/AutomaticPrice', '自动充值价格设置')">自动充值价格设置</MenuItem>
 							<MenuItem name="/Echartspage" @click.native="onSelected('/Echartspage', '我的佣金')">我的佣金</MenuItem>
+							<MenuItem name="/CommissionRecord" @click.native="onSelected('/CommissionRecord', '佣金记录')">佣金记录</MenuItem>
+							<MenuItem name="/WithdrawalRecord" @click.native="onSelected('/WithdrawalRecord', '提现记录')">提现记录</MenuItem>
 						</Submenu>
 						<!-- <Submenu name="6">
 							<template slot="title">
@@ -268,7 +271,7 @@
 		<div :class="tabboxs?'tabboxs active':'tabboxs'">
 			<span @click="goUpadatePwd">修改登录密码</span>
 			<!-- <span>修改登二级密码</span> -->
-			<span @click="smsPropfun">短信提醒</span>
+			<!-- <span @click="smsPropfun">短信提醒</span> -->
 			<span @click="logoutfun">退出</span>
 		</div>
 		<!-- 退出登录模态框 -->

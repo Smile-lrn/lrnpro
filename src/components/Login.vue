@@ -171,6 +171,10 @@
             handleReset (name) {
                 this.$refs[name].resetFields();
             }
-        }
+		},
+		created(){
+			sessionStorage.clear();
+			localStorage.clear();
+		}
     }
 </script>

@@ -37,7 +37,7 @@
         </Form>
         <!-- 查询时无充值按钮-->
         <div class="btnbox" v-if="tem_params.type=='cz'">
-            <Button type="primary" style="margin:30px 100px;">充值</Button>
+            <Button type="primary" style="margin:30px 100px;" @click="">充值</Button>
         </div>
     </div>
 </template>
@@ -54,30 +54,6 @@
                     input5: '04联通'
                 },
                 cityList: [
-                    {
-                        value: '',
-                        label: '请选择套餐'
-                    },
-                    {
-                        value: '0',
-                        label: '小山卡1G月包/1个月（4.20）'
-                    },
-                    {
-                        value: '1',
-                        label: '小山卡1G季度包/3个月（4.80）'
-                    },
-                    {
-                        value: '2',
-                        label: '小山卡2G月包/1个月（5.40）'
-                    },
-                    {
-                        value: '3',
-                        label: '小山卡1G半年包/6个月（5.40）'
-                    },
-                    {
-                        value: '4',
-                        label: '小山卡1G年包/12个月（6.00）'
-                    }
                 ],
                 model6: '',
                 tem_params:'',
@@ -85,14 +61,34 @@
             }
         },
         methods:{
-            
+            // 获取套餐列表
+            getqueryByApiId(){
+                var that = this;
+                var params = {};
+                    params = {
+                        apiId:this.defaultData.apiId
+                    };
+                    that.$fetch('/api/queryByApiId', params).then((data)=>{
+                        console.log(data)
+                        var temData = data || [];
+                        if(temData.length>0){
+                            that.model6 = temData[0].id;
+                            temData.forEach(function(element,index){
+                                element.value = element.id;
+                                element.label = element.setMealName+'/'+element.periodTimeStr+'('+element.price+')'
+                            })
+                        }
+                        that.cityList = data;
+                    })
+            }
         },
         created(){
             console.log(this.$route.params)
             var tem_params = this.$route.params;
             if(tem_params.type == 'cz'){
                 this.defaultData = JSON.parse(sessionStorage.getItem('defaultData'));
-                
+                console.log(this.defaultData)
+                this.getqueryByApiId();
             }
             this.tem_params = tem_params;
         },

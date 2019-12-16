@@ -12,7 +12,7 @@ const state = {
 	"logo":'',
 	"token":'',
 	"uploadurl":'http://xjyc.mumarenkj.com/phone/base/imgupload',//上传图片接口
-	"pageSize":1,
+	"pageSize":10,
 }
 // 导出state
 export default state

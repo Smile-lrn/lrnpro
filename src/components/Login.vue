@@ -16,14 +16,14 @@
 		min-height: 100%; 
 		height: auto;  
 		width: 100%;  
-		background: url(../../static/0.png) no-repeat;
+		background: url(../../static/bg.jpg) no-repeat;
 		background-size: cover;
 		/* 加滤镜 */
 		/* //背景模糊设置 */
-		filter: blur(10px); 
-		 /* //背景灰度设置  */
-		-webkit-filter: grayscale(100%);  
-		filter:grayscale(100%);
+		// filter: blur(10px); 
+		//  /* //背景灰度设置  */
+		// -webkit-filter: grayscale(100%);  
+		// filter:grayscale(100%);
 	}
 	.formbox{
 		background: rgba(0,0,0,.6);

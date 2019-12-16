@@ -431,6 +431,7 @@
 					name: '/Detail',
 					params:{
 						type:'cz',
+						id:row.iccid
 						// defaultData:JSON.stringify(row),
 					}
 				});

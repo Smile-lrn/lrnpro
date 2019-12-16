@@ -147,7 +147,7 @@
                             parentId:'',//0表示一级代理
                             accountBalance:''//账户余额
                         }
-                        that.$post('/user/addOrUpdate',params).then((data)=>{
+                        that.$fetch('/user/addOrUpdate',params).then((data)=>{
                             console.log(data)
                             if(data.code == '500'){
                                 that.$Message.error('请求失败,请稍后重试!');

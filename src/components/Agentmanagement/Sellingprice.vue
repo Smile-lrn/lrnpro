@@ -105,7 +105,7 @@
 	
 </style>
 <template>
-    <div class="balancebox">
+        <div class="balancebox">
 		<div class="searchbox">
 			<div class="lmbxo">
 				<Select v-model="model2" @on-change="onChagefun"  style="width:200px">
@@ -122,31 +122,56 @@
                代理成本价格=终端价格*代理成本价格比例： <input type="number">
             </p>
         </div>
-		<Table :columns="columns" :data="data">
-			<template slot-scope="{ row, index }" slot="otherprice">
-				<Input type="text" v-model="row.otherprice" />
+		<Table :columns="columns" :data="data"> 
+			<template slot-scope="{ row, index }" slot="apiName">
+				<span>{{row.apiName}}</span>
 			</template>
-
-			<template slot-scope="{ row, index }" slot="pcprice">
-				<Input type="text" v-model="row.pcprice" />
+            <template slot-scope="{ row, index }" slot="package">
+				<span>{{row.package}}</span>
 			</template>
-			<template slot-scope="{ row, index }" slot="action">
+            <template slot-scope="{ row, index }" slot="periodTimeStr">
+				<span>{{row.periodTimeStr}}</span>
+			</template>
+            <template slot-scope="{ row, index }" slot="costPriceDecimal">
+				<span>{{row.costPriceDecimal}}</span>
+			</template>
+            <template slot-scope="{ row, index }" slot="agentCostPriceDecimal" >
+                <Input type="text" v-model="row.agentCostPriceDecimal" @on-change="changePrice(row,index)"/>
+			</template>
+			<template slot-scope="{ row, index }" slot="terminalPriceDecimal" >
+                <Input type="text" v-model="row.terminalPriceDecimal" @on-change="changePrice(row,index)"/>
+			</template>
+            <template slot-scope="{ row, index }" slot="action">
+				<Button @click="handleSave(row,index)">保存</Button>
+			</template> 
+			<!-- <template slot-scope="{ row, index }" slot="AutomaticPrice" >
+                <div v-if="(editIndex === index ) || bacthUpdateFlag" >
+				    <Input type="text" v-model="row.AutomaticPrice" />
+                </div>
+                <div v-else>
+                    <span>{{row.AutomaticPrice}}</span>
+                </div>
+			</template>
+			<template slot-scope="{ row, index }" slot="action" v-if="!bacthUpdateFlag">
 			<div v-if="editIndex === index">
-				<Button @click="handleSave(index)">保存</Button>
+				<Button @click="handleSave(row,index)">保存</Button>
 				<Button @click="editIndex = -1">取消</Button>
 			</div>
 			<div v-else>
 				<Button @click="handleEdit(row, index)">操作</Button>
 			</div>
-			</template>
+			</template> -->
 		</Table>
-		<Page :total="100" show-elevator />
+		<Page :total="totalNum" :page-size="size" show-elevator @on-change="setPage"/>
     </div>
 </template>
 <script>
     export default {
         data () {
             return {
+                selection:[],//选中项
+                batchName:'批量修改',
+                bacthUpdateFlag:false,
 				labelinvalue:true,
 				money:'',
 				model1:'请选择状态',
@@ -155,83 +180,142 @@
 				endiccid:'',
 				detailFlag:false,
                 model2:'0',
-                model3:'10',
+				totalNum:0,
+				page:1,
+				size:this.$store.state.pageSize,
 				yidongpickers: [
-                	{
-                		value: '0',
-                		label: 'api'
-                	},
-                	{
-                		value: '38',
-                		label: '移动02'
-                	},
-                ],
-                telecompickers: [
-                	{
-                		value: '10',
-                		label: '蓝色'
-                	},{
-                		value: '20',
-                		label: '红色'
-					},
-					{
-                		value: '50',
-                		label: '绿色'
-					},
-					{
-                		value: '100',
-                		label: '橙色'
-                	}
-                ],
+				],
+				data:[],
 				columns: [
+                    {
+                        type: 'selection',
+                        width: 60,
+                        align: 'center'
+                    },
 					{
 						title: 'API',
-						key: 'api'
+						slot: 'apiName'
 					},
 					{
 						title: '套餐',
-						key: 'taocan'
+						slot: 'package'
 					},
 					{
 						title: '有效期',
-						key: 'yxq'
+						slot: 'periodTimeStr'
 					},
 					{
 						title: '我的成本价格',
-						key: 'myprice'
+						slot: 'costPriceDecimal'
 					},
 					{
-						title: '代理成本价格',
-						slot: 'otherprice'
+						title: '代理本价格',
+						slot: 'agentCostPriceDecimal'
 					},
 					{
+
 						title: '终端价格',
-						slot: 'pcprice'
+						slot: 'terminalPriceDecimal'
 					},
 					{
 						title: '操作',
 						slot: 'action'
 					}
 					],
-					data: [
-					{
-						api: '02联通',
-						taocan: '500M',
-						yxq: '一个月',
-						myprice: '5.25',
-						otherprice:'5.20',
-						pcprice:'6.66',
-						id:1
-					}
-					],
+					data: [{
+                        id:'1',
+                        apiId:'1',
+                        apiName:'02联通',
+                        package:'500M',
+                        periodTimeStr:'1个月',
+                        costPriceDecimal:'5.25',
+						agentCostPriceDecimal:'7.04',
+						terminalPriceDecimal:'8.04',
+                        color:'red',
+                    },{
+                        id:'2',
+                        apiId:'2',
+                        apiName:'01联通',
+                        package:'1500M',
+                        periodTimeStr:'3个月',
+                        costPriceDecimal:'5.25',
+						agentCostPriceDecimal:'7.04',
+						terminalPriceDecimal:'8.04',
+                        color:'green',
+                    },{
+                        id:'3',
+                        apiId:'3',
+                        apiName:'04联通',
+                        package:'600M',
+                        periodTimeStr:'1个月',
+                        costPriceDecimal:'5.25',
+						agentCostPriceDecimal:'7.04',
+						terminalPriceDecimal:'8.04',
+                        color:'red',
+                    }],
 					editIndex: -1,  // 当前聚焦的输入框的行数
 					editName: '',  // 第一列输入框，当然聚焦的输入框的输入内容，与 data 分离避免重构的闪烁
-					editAge: '',  // 第二列输入框
-					editBirthday: '',  // 第三列输入框
-					editAddress: '',  // 第四列输入框
             }
         },
         methods: {
+            // 输入框更改
+            changePrice(row,index){
+                this.data[index].AutomaticPrice = row.AutomaticPrice;
+            },
+            // 选中某一行
+            onSelectFun(selection,row){
+                // selection 已选项,row刚选择的项
+                this.selection = selection;
+            },
+            // 选中某一行
+            onCancelfun(selection,row){
+                // selection 已选项,row刚取消的项
+                this.selection = selection;
+            },
+            handleSelectAll(){
+                if(this.selection.length==0){
+                    this.$Message.error('请选择需要保存的项！')
+                }else{
+                    this.saveData(this.selection)
+                }
+            },
+            // 保存数据
+            saveData(params){
+                console.log(params)
+            },
+            // 批量修改
+            // bacthUpdate(){
+            //     this.bacthUpdateFlag = !this.bacthUpdateFlag;
+            //     if(bacthUpdateFlag){
+            //         this.batchName='取消修改'
+            //     }else{
+            //         this.batchName='批量修改'
+            //     }
+            // },
+            // 设置页码
+			setPage(page){
+				console.log(page)
+				this.page = page;
+				this.getList();
+            },
+            // 获取查询列表
+			getList(){
+                var that = this;
+				this.$fetch('',{
+                    apiId:this.model2
+                })
+				.then(function(data){
+					that.totalNum = data.total;
+					console.log(that.totalNum)
+					// 对金额做处理
+					// data.list
+					that.data = data.list;
+				})
+			},
+			// 查询
+			searchFun(){
+				this.getList(this.getParams())
+			},
 			onChagefun(){},
 			// 导出表格数据
 			exportData (type) {
@@ -254,18 +338,12 @@
 			},
 			handleEdit (row, index) {
 				this.editName = row.name;
-				this.editAge = row.age;
-				this.editAddress = row.address;
-				this.editBirthday = row.birthday;
 				this.editIndex = index;
 			},
-			handleSave (index) {
-				this.data[index].name = this.editName;
-				this.data[index].age = this.editAge;
-				this.data[index].birthday = this.editBirthday;
-				this.data[index].address = this.editAddress;
+			handleSave (row,index) {
+                this.data[index].AutomaticPrice = row.AutomaticPrice;
+                this.saveData([row])
 				this.editIndex = -1;
-				console.log(this.data)
 			},
 			getBirthday (birthday) {
 				const date = new Date(parseInt(birthday));
@@ -273,7 +351,14 @@
 				const month = date.getMonth() + 1;
 				const day = date.getDate();
 				return `${year}-${month}-${day}`;
-			}
+            },
+            // 获取api下拉列表
+            getApiList(){
+                this.$fetch('', {}).then((data)=>{
+                    console.log(data)
+                    this.yidongpickers = data;
+                })
+            }
 		},
 		
     }

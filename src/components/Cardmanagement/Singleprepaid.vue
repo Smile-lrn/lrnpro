@@ -10,7 +10,7 @@
 <template>
     <div class="singlebox">
 		<Col :xs="20" :sm="12" :md="12" :lg='8'>
-			<Input  search enter-button="查询" placeholder="请输入绑定好号或ICCID" @on-search="topUpfun" @on-enter="topUpfun"/>
+			<Input v-model="iccid"  search enter-button="查询" placeholder="请输入绑定好号或ICCID" @on-search="topUpfun" @on-enter="topUpfun"/>
 		</Col>
     </div>
 </template>
@@ -18,16 +18,22 @@
     export default {
         data (){
 			return {
-
+				iccid:'',
 			}
 		},
 		methods:{
 			//充值
 			topUpfun:function(){
+				var that = this;
+				if(this.iccid === ''){
+					this.$Message.error('请填写所需要充值的ICCID！');
+					return;
+				}
 				this.$router.push({
 					name: '/Detail',
 					params:{
-						type:'cz'
+						type:'dkcz',
+						id:that.iccid.trim(),
 					}
 				});
 			},

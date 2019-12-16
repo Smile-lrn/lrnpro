@@ -398,7 +398,9 @@
 			searchFun(){
 				this.getList(this.getParams())
 			},
-			onChagefun(){},
+			onChagefun(){
+				console.log(this.model3)
+			},
 			// 选择类型
 			choosecategory(val){
 				console.log(val)
@@ -470,12 +472,24 @@
 				var that = this;
                 this.$refs[name].validate((valid) => {
                     if (valid) {
-                        that.$post('/user/addOrUpdate',this.formCustom).then((data)=>{
+						var params = {
+							show:that.model3,
+							id:that.formCustom.id,//添加
+                            loginAccount:that.formCustom.loginAccount,
+                            password:that.formCustom.passwd,
+                            userName:that.formCustom.name,
+                            phoneNum:that.formCustom.phonenumber,
+                            mailAddress:that.formCustom.emails,
+                            parentId:'',//0表示一级代理
+                            accountBalance:''//账户余额
+						}
+                        that.$fetch('/user/addOrUpdate',params).then((data)=>{
                             console.log(data)
                             if(data.code == '500'){
                                 that.$Message.error('请求失败,请稍后重试!');
                             }else if(data.code == '200'){
-                                that.$Message.success('添加或修改成功！');
+								that.$Message.success('修改成功！');
+								that.editboxFlag = false;
                                 that.searchFun();
                             }
                         })

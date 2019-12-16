@@ -70,7 +70,7 @@ export default new Router({
 				component: Telecommunicationcard,
 			},
 			{
-				path: '/Detail/:type/',
+				path: '/Detail/:type/:id',
 				name: '/Detail',
 				component: Detail,
 			},

@@ -410,7 +410,8 @@
 				this.$router.push({
 					name: '/Detail',
 					params:{
-						type:'ck'
+						type:'ck',
+						id:row.iccid
 					}
 				});
 			},

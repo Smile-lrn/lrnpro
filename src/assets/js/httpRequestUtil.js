@@ -87,7 +87,7 @@ export function fetch(url, params = {},login) {
             if(response.data.code=='200'){
               resolve(response.data.data || response.data);
             }else{
-              Message.error('服务器错误：500，请稍后重试！');
+              resolve(response.data);
             }
           }else{
             Message.error('服务器错误：500，请稍后重试！');

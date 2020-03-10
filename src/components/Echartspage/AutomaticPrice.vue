@@ -243,6 +243,16 @@
             }
         },
         methods: {
+			// 获取api列表
+			getapiList(){
+				var that = this;
+				var params = {
+				}
+				this.$fetch('/api/queryByType',params)
+				.then(function(data){
+					that.yidongpickers = data;
+				})
+			},
             // 输入框更改
             changePrice(row,index){
                 this.data[index].AutomaticPrice = row.AutomaticPrice;
@@ -343,8 +353,11 @@
                     console.log(data)
                     this.yidongpickers = data;
                 })
-            }
-		},
+			}
 		
+		},
+		created(){
+			this.getapiList();
+		}
     }
 </script>

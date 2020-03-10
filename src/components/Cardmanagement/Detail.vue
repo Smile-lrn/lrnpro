@@ -82,24 +82,24 @@
                     params = {
                         iccid:this.tem_params.id
                     };
-                    that.$fetch('/cardManage/queryByIccid', params).then((data)=>{
-                        console.log(data)
-                        if(!data){
-                            that.$Message.error('未查到该ICCID'+params.iccid+'的相关信息，请检查是否有误，请重新查询！');
-                            return
-                        }
-                        if(data.status==1){
-							data.statustxt = '正常使用'
-						}else if(data.status==2){
-							element.statustxt = '库存'
-						}else if(data.status==3){
-							data.statustxt = '停用'
-						}
-                        that.defaultData = data;
-                        if(that.tem_params.type == 'dkcz' && data &&data.apiId){
-                            that.getqueryByApiId();
-                        }
-                    })
+                that.$fetch('/cardManage/queryByIccid', params).then((data)=>{
+                    console.log(data)
+                    if(!data){
+                        that.$Message.error('未查到该ICCID'+params.iccid+'的相关信息，请检查是否有误，请重新查询！');
+                        return
+                    }
+                    if(data.status==1){
+                        data.statustxt = '正常使用'
+                    }else if(data.status==2){
+                        element.statustxt = '库存'
+                    }else if(data.status==3){
+                        data.statustxt = '停用'
+                    }
+                    that.defaultData = data;
+                    if(that.tem_params.type == 'dkcz' && data &&data.apiId){
+                        that.getqueryByApiId();
+                    }
+                })
             },
             touupfun(){
                 if(!this.model6){

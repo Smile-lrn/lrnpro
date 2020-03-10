@@ -105,25 +105,22 @@
 	
 </style>
 <template>
-        <div class="balancebox">
+    <div class="balancebox">
 		<div class="searchbox">
 			<div class="lmbxo">
-				<Select v-model="model2" @on-change="onChagefun"  style="width:200px">
-					<Option v-for="item in yidongpickers" :value="item.value" :key="item.value">{{ item.label }}</Option>
+				<Select v-model="model2" placeholder="请选择apiName" @on-change="onChagefun"  style="width:200px">
+					<Option v-for="item in yidongpickers" :value="item.id" :key="item.id">{{ item.apiName }}</Option>
 				</Select>
-				<Select v-model="model3" @on-change="onChagefun"  style="width:200px">
+				<!-- <Select v-model="model3" @on-change="onChagefun"  style="width:200px">
 					<Option v-for="item in telecompickers" :value="item.value" :key="item.value">{{ item.label }}</Option>
-				</Select>
-				<Button type="primary" style="margin-right: 20px;" size="large" @click="exportData(1)">搜索</Button>
-			</div>
+				</Select> -->
+				<Button type="primary" style="margin-right: 20px;" size="large"  @click="searchFun">搜索</Button>
+				<Button type="primary" style="margin-right: 20px;" size="large"  @click="handleSelectAll" v-if="data.length>0">批量保存</Button>
+                <!-- <Button type="primary" style="margin-right: 20px;" size="large"  @click="bacthUpdate">{{batchName}}</Button> -->
+            </div>
 		</div>
-        <div class="setpricebox">
-            <p>
-               代理成本价格=终端价格*代理成本价格比例： <input type="number">
-            </p>
-        </div>
-		<Table :columns="columns" :data="data"> 
-			<template slot-scope="{ row, index }" slot="apiName">
+		<Table ref="selection" :columns="columns" :data="data" @on-select="onSelectFun" @on-select-cancel="onCancelfun">
+            <template slot-scope="{ row, index }" slot="apiName">
 				<span>{{row.apiName}}</span>
 			</template>
             <template slot-scope="{ row, index }" slot="package">
@@ -132,14 +129,14 @@
             <template slot-scope="{ row, index }" slot="periodTimeStr">
 				<span>{{row.periodTimeStr}}</span>
 			</template>
-            <template slot-scope="{ row, index }" slot="costPriceDecimal">
-				<span>{{row.costPriceDecimal}}</span>
+            <template slot-scope="{ row, index }" slot="stockPrice">
+				<span>{{row.stockPrice}}</span>
 			</template>
-            <template slot-scope="{ row, index }" slot="agentCostPriceDecimal" >
-                <Input type="text" v-model="row.agentCostPriceDecimal" @on-change="changePrice(row,index)"/>
+            <template slot-scope="{ row, index }" slot="AutomaticPrice" >
+                <Input type="text" v-model="row.AutomaticPrice" @on-change="changePrice(row,index)"/>
 			</template>
-			<template slot-scope="{ row, index }" slot="terminalPriceDecimal" >
-                <Input type="text" v-model="row.terminalPriceDecimal" @on-change="changePrice(row,index)"/>
+			<template slot-scope="{ row, index }" slot="lastPrice" >
+                <Input type="text" v-model="row.AutomaticPrice" @on-change="changePrice(row,index)"/>
 			</template>
             <template slot-scope="{ row, index }" slot="action">
 				<Button @click="handleSave(row,index)">保存</Button>
@@ -184,8 +181,7 @@
 				page:1,
 				size:this.$store.state.pageSize,
 				yidongpickers: [
-				],
-				data:[],
+                ],
 				columns: [
                     {
                         type: 'selection',
@@ -206,16 +202,15 @@
 					},
 					{
 						title: '我的成本价格',
-						slot: 'costPriceDecimal'
+						slot: 'stockPrice'
 					},
 					{
-						title: '代理本价格',
-						slot: 'agentCostPriceDecimal'
+						title: '代理成本价格',
+						slot: 'AutomaticPrice'
 					},
 					{
-
 						title: '终端价格',
-						slot: 'terminalPriceDecimal'
+						slot: 'lastPrice'
 					},
 					{
 						title: '操作',
@@ -228,9 +223,8 @@
                         apiName:'02联通',
                         package:'500M',
                         periodTimeStr:'1个月',
-                        costPriceDecimal:'5.25',
-						agentCostPriceDecimal:'7.04',
-						terminalPriceDecimal:'8.04',
+                        stockPrice:'5.25',
+                        AutomaticPrice:'7.04',
                         color:'red',
                     },{
                         id:'2',
@@ -238,9 +232,8 @@
                         apiName:'01联通',
                         package:'1500M',
                         periodTimeStr:'3个月',
-                        costPriceDecimal:'5.25',
-						agentCostPriceDecimal:'7.04',
-						terminalPriceDecimal:'8.04',
+                        stockPrice:'15.25',
+                        AutomaticPrice:'17.04',
                         color:'green',
                     },{
                         id:'3',
@@ -248,9 +241,8 @@
                         apiName:'04联通',
                         package:'600M',
                         periodTimeStr:'1个月',
-                        costPriceDecimal:'5.25',
-						agentCostPriceDecimal:'7.04',
-						terminalPriceDecimal:'8.04',
+                        stockPrice:'5.25',
+                        AutomaticPrice:'7.04',
                         color:'red',
                     }],
 					editIndex: -1,  // 当前聚焦的输入框的行数
@@ -258,6 +250,16 @@
             }
         },
         methods: {
+			// 获取api列表
+			getapiList(){
+				var that = this;
+				var params = {
+				}
+				this.$fetch('/api/queryByType',params)
+				.then(function(data){
+					that.yidongpickers = data;
+				})
+			},
             // 输入框更改
             changePrice(row,index){
                 this.data[index].AutomaticPrice = row.AutomaticPrice;
@@ -360,6 +362,8 @@
                 })
             }
 		},
-		
+		created(){
+			this.getapiList();
+		}
     }
 </script>

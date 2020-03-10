@@ -101,8 +101,8 @@
     <div class="balancebox">
 		<div class="searchbox">
 			<div class="lmbxo">
-				<input type="text" v-model="money" placeholder="请输入搜索关键字(备注)">
-				<Button type="primary" style="margin-right: 20px;" size="large" @click="exportData(1)">搜索</Button>
+				<input type="text" v-model="param_remark" placeholder="请输入搜索关键字(备注)">
+				<Button type="primary" style="margin-right: 20px;" size="large"  @click="searchFun">搜索</Button>
 			</div>
 		</div>
         <Table border ref="selection" :columns="columns4" :data="data1" >
@@ -110,7 +110,7 @@
 				<span style="cursor: pointer;">查看</span>
 			</template>
 		</Table>
-		<Page :total="100" show-elevator />
+		<Page :total="totalNum" :page-size="size" show-elevator @on-change="setPage"/>
     </div>
 </template>
 <script>
@@ -118,11 +118,15 @@
         data () {
             return {
 				labelinvalue:true,
-				money:'',
+				param_remark:'',
                 columns4: [
 					{
 					    title: 'ID',
 					    key: 'id'
+					},
+					{
+					    title: 'userId',
+					    key: 'userId'
 					},
                     {
                         title: '备注',
@@ -131,18 +135,50 @@
                     },
 					{
 					    title: '时间',
-					    key: 'date'
+					    key: 'createTime'
 					},
                     
                 ],
-                data1: [{
-					id:1,
-					remark:'skdjgldkfhfblkfd',
-					date:'2019-07-15 00:00'
-				}]
+				data1: [],
+				totalNum:0,
+				page:1,
+				size:this.$store.state.pageSize,
             }
         },
         methods: {
+			// 设置页码
+			setPage(page){
+				console.log(page)
+				this.page = page;
+				this.searchFun();
+			},
+			// 获取查询参数
+			getParams(){
+				var params = {};
+				params = {
+					remark:this.param_remark,//备注
+					page:this.page,	//否	int	当前页码 不写默认为0
+					size:this.size,	//否	int	每页数量 不写默认为10
+				}
+				return params;
+			},
+			// 获取列表
+			getList(params){
+				var that = this;
+				this.$fetch('/diary/queryByPage',params)
+				.then(function(data){
+					// console.log(data)
+					// data.list.forEach(function(element,index){
+					// 	element.createTime = that.filterDate(element.createTime)
+					// })
+					that.totalNum = data.total;
+					that.data1 = data.list;
+				})
+			},
+			// 查询
+			searchFun(){
+				this.getList(this.getParams())
+			},
 			onChagefun(){},
 			// 选择类型
 			choosecategory(val){
@@ -175,6 +211,9 @@
                     });
                 }
             }      
-        }
+		},
+		created(){
+			this.searchFun();
+		}
     }
 </script>

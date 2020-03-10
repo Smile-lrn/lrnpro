@@ -68,7 +68,7 @@ export function fetch(url, params = {},login) {
               Message.error(response.data.message);
             }
           }else{
-            Message.error('服务器错误：500，请稍后重试！');
+            Message.error('服务器错误：500，请联系客服人员或稍后重试！');
           }
         })
         .catch(err => {
@@ -90,7 +90,7 @@ export function fetch(url, params = {},login) {
               resolve(response.data);
             }
           }else{
-            Message.error('服务器错误：500，请稍后重试！');
+            Message.error('服务器错误：500，请联系客服人员或稍后重试！');
           }
         })
         .catch(err => {
@@ -119,7 +119,7 @@ export function post(url, data = {}) {
         if(response && response.status == '200'){
           resolve(response.data);
         }else{
-          Message.error('服务器错误：500，请稍后重试！');
+          Message.error('服务器错误：500，请联系客服人员或稍后重试！');
         }
       }, err => {
         reject(err)

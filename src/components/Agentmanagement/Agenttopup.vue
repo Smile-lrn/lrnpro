@@ -63,6 +63,7 @@ export default {
     return {
       current: 0,
       tem_params: "",
+      defaultData:{},
       formLeft: {
         input5: "鹤洋（heyang）",
         input6: "10.01",
@@ -71,6 +72,23 @@ export default {
     };
   },
   methods: {
+    // 获取当前ICCID的代理商以及当前余额
+    getIccidInfo(){
+      var that = this;
+      var params = {};
+          params = {
+              iccid:this.tem_params.id
+          };
+      that.$fetch('/cardManage/queryByIccid', params).then((data)=>{
+          console.log(data)
+          if(data.code=='500'){
+            that.$Message.error('服务器错误：500，请联系客服人员或稍后重试！');
+          }else if(data && !data.data){
+              that.$Message.error('未查到该ICCID'+params.iccid+'的相关信息，请检查是否有误，请重新查询！');
+          }
+          that.defaultData = data;
+      })
+    },
     prefun() {
       if (this.current <= 0) {
         this.current = 0;
@@ -90,6 +108,7 @@ export default {
     console.log(this.$route.params);
     var tem_params = this.$route.params;
     this.tem_params = tem_params;
+    this.getIccidInfo();
   }
 };
 </script>

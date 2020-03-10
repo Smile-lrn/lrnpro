@@ -190,7 +190,7 @@ export default {
         },
         {
           title: "金额",
-          key: "amount"
+          key: "amountDecimal"
         },
         {
           title: "备注",
@@ -199,7 +199,7 @@ export default {
         },
         {
           title: "变更后金额",
-          key: "balanceAfterChange"
+          key: "balanceAfterChangeDecimal"
         },
         {
           title: "时间",
